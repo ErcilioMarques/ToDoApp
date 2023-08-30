@@ -19,13 +19,13 @@ class SharedViewModel @Inject constructor(
     private val repository: ToDoRepository,
 ) : ViewModel() {
 
-     val searchAppBarState: MutableState<SearchAppBarState> =
+    val searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
-     val searchTextState: MutableState<String> = mutableStateOf("")
+    val searchTextState: MutableState<String> = mutableStateOf("")
 
     private val _allTasks = MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
     val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
-    fun getAlltasks() {
+    fun getAllTasks() {
         _allTasks.value = RequestState.Loading
         try {
             viewModelScope.launch {
@@ -33,9 +33,19 @@ class SharedViewModel @Inject constructor(
                     _allTasks.value = RequestState.Success(it)
                 }
             }
-        }catch (error: Exception){
+        } catch (error: Exception) {
             _allTasks.value = RequestState.Error(error)
         }
 
+    }
+
+    private val _selectedTask: MutableStateFlow<ToDoTask?> = MutableStateFlow(null)
+    val selectedTask: StateFlow<ToDoTask?> = _selectedTask
+    fun getSelectedTask(taskId: Int) {
+        viewModelScope.launch {
+            repository.getSelectedTask(taskId).collect { taskId ->
+                _selectedTask.value = taskId
+            }
+        }
     }
 }

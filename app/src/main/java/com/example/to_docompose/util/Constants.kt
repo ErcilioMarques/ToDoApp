@@ -1,5 +1,7 @@
 package com.example.to_docompose.util
 
+import androidx.compose.ui.unit.dp
+
 object Constants {
     const val DATABASE_TABLE = "todo_table"
     const val DATABASE_NAME = "todo_database"
@@ -9,4 +11,6 @@ object Constants {
 
     const val LIST_ARGUMENT_KEY = "action"
     const val TASK_ARGUMENT_KEY = "taskId"
+
+    val PRIORITY_DROP_DOWN_HEIGHT = 60.dp
 }
