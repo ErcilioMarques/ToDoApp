@@ -29,9 +29,6 @@ fun TaskScreen(
         topBar = {
             TaskAppBar(selectedTask = selectedTask, navigateToListScreen = { action ->
 
-                Log.d("Task Scree", sharedViewModel.validateFields().toString())
-                Log.d("Task Scree", action.toString())
-
                 if (action == Action.NO_ACTION) {
                     navigateToListScreen(action)
 

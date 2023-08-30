@@ -30,11 +30,14 @@ fun ListScreen(
         sharedViewModel.getAllTasks()
     }
 
+    val action by sharedViewModel.action
     val allTasks = sharedViewModel.allTasks.collectAsState()
     Log.d("ListScreen", "LaunchedEffect Trigged")
 
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
+
+    sharedViewModel.handleDatabaseActions(action)
     Scaffold(
         topBar = {
             ListAppBar(
