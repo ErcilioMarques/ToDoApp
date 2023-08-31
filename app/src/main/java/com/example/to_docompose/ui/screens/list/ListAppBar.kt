@@ -42,6 +42,7 @@ import com.example.to_docompose.ui.theme.Typography
 import com.example.to_docompose.ui.theme.topAppBarBackgroundColor
 import com.example.to_docompose.ui.theme.topAppBarContentColor
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
+import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
 import com.example.to_docompose.util.TrailingIconState
 
@@ -56,7 +57,9 @@ fun ListAppBar(
         SearchAppBarState.CLOSED -> {
             DefaultListAppbar(onSearchClicked = {
                 sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
-            }, onSortClicked = {}, onDeleteClicked = {})
+            }, onSortClicked = {}, onDeleteAllClicked = {
+                sharedViewModel.action.value = Action.DELETE_ALL
+            })
         }
 
         else -> SearchAppBar(
@@ -76,7 +79,7 @@ fun ListAppBar(
 
 @Composable
 fun DefaultListAppbar(
-    onSearchClicked: () -> Unit, onSortClicked: (Priority) -> Unit, onDeleteClicked: () -> Unit
+    onSearchClicked: () -> Unit, onSortClicked: (Priority) -> Unit, onDeleteAllClicked: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -89,7 +92,7 @@ fun DefaultListAppbar(
             ListAppBarActions(
                 onSearchClicked = onSearchClicked,
                 onSortClicked = onSortClicked,
-                onDeleteClicked = onDeleteClicked
+                onDeleteAllClicked = onDeleteAllClicked
             )
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
@@ -98,11 +101,11 @@ fun DefaultListAppbar(
 
 @Composable
 fun ListAppBarActions(
-    onSearchClicked: () -> Unit, onSortClicked: (Priority) -> Unit, onDeleteClicked: () -> Unit
+    onSearchClicked: () -> Unit, onSortClicked: (Priority) -> Unit, onDeleteAllClicked: () -> Unit
 ) {
     SearchAction(onSearchClicked)
     SortAction(onSortClicked = onSortClicked)
-    DeleteAllAction(onDeleteClicked = onDeleteClicked)
+    DeleteAllAction(onDeleteAllClicked = onDeleteAllClicked)
 }
 
 @Composable
@@ -155,7 +158,7 @@ fun SortAction(onSortClicked: (Priority) -> Unit) {
 }
 
 @Composable
-fun DeleteAllAction(onDeleteClicked: () -> Unit) {
+fun DeleteAllAction(onDeleteAllClicked: () -> Unit) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -170,7 +173,7 @@ fun DeleteAllAction(onDeleteClicked: () -> Unit) {
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             DropdownMenuItem(onClick = {
                 expanded = false
-                onDeleteClicked()
+                onDeleteAllClicked()
             }) {
                 Text(
                     modifier = Modifier.padding(start = LARGE_PADDING),
@@ -276,7 +279,7 @@ fun SearchAppBar(
 @Composable
 @Preview
 private fun DefaultListAppBarPreview() {
-    DefaultListAppbar(onSearchClicked = {}, onSortClicked = {}, onDeleteClicked = {})
+    DefaultListAppbar(onSearchClicked = {}, onSortClicked = {}, onDeleteAllClicked = {})
 }
 
 @Composable
