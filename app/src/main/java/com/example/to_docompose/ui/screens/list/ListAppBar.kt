@@ -66,7 +66,9 @@ fun ListAppBar(
                 sharedViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
                 sharedViewModel.searchTextState.value = ""
             },
-            onSearchClicked = {})
+            onSearchClicked = {
+                sharedViewModel.searchDatabase(searchQuery = it)
+            })
 
     }
 
@@ -78,7 +80,10 @@ fun DefaultListAppbar(
 ) {
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.list_screen_title), color = MaterialTheme.colors.topAppBarContentColor)
+            Text(
+                text = stringResource(R.string.list_screen_title),
+                color = MaterialTheme.colors.topAppBarContentColor
+            )
         },
         actions = {
             ListAppBarActions(
@@ -224,15 +229,16 @@ fun SearchAppBar(
             },
             trailingIcon = {
                 IconButton(onClick = {
-                    when(trailingIconState){
-                        TrailingIconState.READY_TO_DELETE->{
+                    when (trailingIconState) {
+                        TrailingIconState.READY_TO_DELETE -> {
                             onTextChange("")
                             trailingIconState = TrailingIconState.READY_TO_CLOSE
                         }
-                        TrailingIconState.READY_TO_CLOSE->{
-                            if(text.isNotEmpty()){
+
+                        TrailingIconState.READY_TO_CLOSE -> {
+                            if (text.isNotEmpty()) {
                                 onTextChange("")
-                            }else{
+                            } else {
                                 onCloseClicked()
                                 trailingIconState = TrailingIconState.READY_TO_DELETE
                             }

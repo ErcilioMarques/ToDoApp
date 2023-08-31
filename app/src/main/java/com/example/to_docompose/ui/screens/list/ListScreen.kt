@@ -40,7 +40,7 @@ fun ListScreen(
     val action by sharedViewModel.action
 
     val allTasks = sharedViewModel.allTasks.collectAsState()
-    Log.d("ListScreen", "LaunchedEffect Trigged")
+    val searchedTasks = sharedViewModel.searchTasks.collectAsState()
 
     val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
     val searchTextState: String by sharedViewModel.searchTextState
@@ -68,7 +68,12 @@ fun ListScreen(
             )
         },
         content = {
-            ListContent(tasks = allTasks.value, navigateToTaskScreen)
+            ListContent(
+                allTasks = allTasks.value,
+                searchedTasks = searchedTasks.value,
+                searchAppBarState = searchAppBarState,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
         },
         floatingActionButton = {
             ListFab(onFabCLicked = navigateToTaskScreen)
