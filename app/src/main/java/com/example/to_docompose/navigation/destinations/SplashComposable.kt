@@ -9,7 +9,7 @@ fun NavGraphBuilder.splashComposable(
     navigateToTaskScreen: () -> Unit,
 ) {
     composable(
-        route = SPLASH_SCREEN,
+        route = SPLASH_SCREEN
     ) {
         SplashScreen(navigateToTaskScreen)
     }
