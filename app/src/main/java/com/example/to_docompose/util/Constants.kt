@@ -15,4 +15,7 @@ object Constants {
     val PRIORITY_DROP_DOWN_HEIGHT = 60.dp
 
     const val MAX_TITLE_LENGTH = 20
+
+    const val PREFERENCE_NAME = "todo_preferences"
+    const val PREFERENCE_KEY = "sort_state"
 }

@@ -2,7 +2,6 @@ package com.example.to_docompose.ui.screens.task
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
