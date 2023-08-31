@@ -1,6 +1,5 @@
 package com.example.to_docompose.navigation.destinations
 
-import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,7 +10,6 @@ import androidx.navigation.navArgument
 import com.example.to_docompose.ui.screens.task.TaskScreen
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.Action
-import com.example.to_docompose.util.Constants
 import com.example.to_docompose.util.Constants.TASK_ARGUMENT_KEY
 import com.example.to_docompose.util.Constants.TASK_SCREEN
 
@@ -23,7 +21,7 @@ fun NavGraphBuilder.taskComposable(
     composable(
         route = TASK_SCREEN,
         arguments = listOf(
-            navArgument(Constants.TASK_ARGUMENT_KEY) {
+            navArgument(TASK_ARGUMENT_KEY) {
                 type = NavType.IntType
             },
         ),
@@ -37,7 +35,7 @@ fun NavGraphBuilder.taskComposable(
 
         LaunchedEffect(key1 = selectedTask) {
             if (selectedTask != null || taskId == -1) {
-                sharedViewModel.updatedTaskFields(selectedTask = selectedTask)
+                sharedViewModel.updateTaskFields(selectedTask = selectedTask)
             }
         }
 

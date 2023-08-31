@@ -29,7 +29,7 @@ class ToDoRepository @Inject constructor(private val toDoDao: ToDoDao) {
         toDoDao.deleteTask(toDoTask)
     }
 
-    suspend fun deleteAllTask() {
+    suspend fun deleteAllTasks() {
         toDoDao.deleteAllTasks()
     }
 

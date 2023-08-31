@@ -1,6 +1,7 @@
 package com.example.to_docompose.ui.screens.list
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -25,6 +26,7 @@ import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ListScreen(
@@ -38,7 +40,7 @@ fun ListScreen(
     }
 
     val allTasks by sharedViewModel.allTasks.collectAsState()
-    val searchedTasks by sharedViewModel.searchTasks.collectAsState()
+    val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
 
     val sortState by sharedViewModel.sortState.collectAsState()
     val lowPriorityTasks by sharedViewModel.lowPriorityTasks.collectAsState()
@@ -79,7 +81,7 @@ fun ListScreen(
                 searchAppBarState = searchAppBarState,
                 onSwipeToDelete = { action, task ->
                     sharedViewModel.updateAction(newAction = action)
-                    sharedViewModel.updatedTaskFields(selectedTask = task)
+                    sharedViewModel.updateTaskFields(selectedTask = task)
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                 },
                 navigateToTaskScreen = navigateToTaskScreen

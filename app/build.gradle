@@ -85,4 +85,6 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib") { version { strictly("1.5.31") } }
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
 }
