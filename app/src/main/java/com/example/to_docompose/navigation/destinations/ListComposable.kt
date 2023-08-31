@@ -1,6 +1,7 @@
 package com.example.to_docompose.navigation.destinations
 
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -28,6 +29,9 @@ fun NavGraphBuilder.listComposable(
         LaunchedEffect(key1 = action ){
             sharedViewModel.action.value = action
         }
-        ListScreen(navigateToTaskScreen = navigateToTaskScreen, sharedViewModel)
+
+        val dataBaseAction by sharedViewModel.action
+
+        ListScreen(action=dataBaseAction, navigateToTaskScreen = navigateToTaskScreen, sharedViewModel)
     }
 }
