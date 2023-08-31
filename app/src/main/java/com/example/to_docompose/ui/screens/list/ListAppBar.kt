@@ -45,7 +45,6 @@ import com.example.to_docompose.ui.theme.topAppBarContentColor
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
-import com.example.to_docompose.util.TrailingIconState
 
 @Composable
 fun ListAppBar(
@@ -204,9 +203,7 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
 ) {
-    var trailingIconState by remember {
-        mutableStateOf(TrailingIconState.READY_TO_DELETE)
-    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -237,20 +234,10 @@ fun SearchAppBar(
             }
         }, trailingIcon = {
             IconButton(onClick = {
-                when (trailingIconState) {
-                    TrailingIconState.READY_TO_DELETE -> {
-                        onTextChange("")
-                        trailingIconState = TrailingIconState.READY_TO_CLOSE
-                    }
-
-                    TrailingIconState.READY_TO_CLOSE -> {
-                        if (text.isNotEmpty()) {
-                            onTextChange("")
-                        } else {
-                            onCloseClicked()
-                            trailingIconState = TrailingIconState.READY_TO_DELETE
-                        }
-                    }
+                if(text.isNotEmpty()){
+                    onTextChange("")
+                }else{
+                    onCloseClicked()
                 }
             }) {
                 Icon(
