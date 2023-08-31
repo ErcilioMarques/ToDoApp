@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 
 val LARGE_PADDING = 12.dp
+val LARGEST_PADDING = 24.dp
 val MEDIUM_PADDING = 12.dp
 val SMALL_PADDING = 12.dp
 
