@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.data.models.ToDoTask
@@ -20,9 +19,9 @@ fun TaskScreen(
     selectedTask: ToDoTask?,
     navigateToListScreen: (Action) -> Unit
 ) {
-    val title: String by sharedViewModel.title
-    val description: String by sharedViewModel.description
-    val priority: Priority by sharedViewModel.priority
+    val title: String = sharedViewModel.title
+    val description: String = sharedViewModel.description
+    val priority: Priority = sharedViewModel.priority
     val context = LocalContext.current
 
     BackHandler {
@@ -53,11 +52,11 @@ fun TaskScreen(
                 },
                 description = description,
                 onDescriptionChange = {
-                    sharedViewModel.description.value = it
+                    sharedViewModel.updateDescription(it)
                 },
                 priority = priority,
                 onPriorityChange = {
-                    sharedViewModel.priority.value = it
+                    sharedViewModel.updatePriority(it)
                 }
             )
         }

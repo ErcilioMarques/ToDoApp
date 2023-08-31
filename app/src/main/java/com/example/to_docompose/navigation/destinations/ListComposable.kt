@@ -36,11 +36,11 @@ fun NavGraphBuilder.listComposable(
 
             if(action != myAction){
                 myAction = action
-                sharedViewModel.action.value = action
+                sharedViewModel.updateAction(action)
             }
         }
 
-        val dataBaseAction by sharedViewModel.action
+        val dataBaseAction = sharedViewModel.action
 
         ListScreen(action=dataBaseAction, navigateToTaskScreen = navigateToTaskScreen, sharedViewModel)
     }

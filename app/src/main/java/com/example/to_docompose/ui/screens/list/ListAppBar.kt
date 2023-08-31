@@ -54,19 +54,19 @@ fun ListAppBar(
     when (searchAppBarState) {
         SearchAppBarState.CLOSED -> {
             DefaultListAppbar(onSearchClicked = {
-                sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
+                sharedViewModel.updateSearchAppBarState(SearchAppBarState.OPENED)
             }, onSortClicked = {
                 sharedViewModel.persistSortState(it)
             }, onDeleteAllConfirmed = {
-                sharedViewModel.action.value = Action.DELETE_ALL
+                sharedViewModel.updateAction(newAction = Action.DELETE_ALL)
             })
         }
 
         else -> SearchAppBar(text = searchTextState,
-            onTextChange = { newText -> sharedViewModel.searchTextState.value = newText },
+            onTextChange = { newText -> sharedViewModel.updateSearchTextState(newText) },
             onCloseClicked = {
-                sharedViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
-                sharedViewModel.searchTextState.value = ""
+                sharedViewModel.updateSearchAppBarState(SearchAppBarState.CLOSED)
+                sharedViewModel.updateSearchTextState("")
             },
             onSearchClicked = {
                 sharedViewModel.searchDatabase(searchQuery = it)
