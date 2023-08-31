@@ -50,7 +50,7 @@ fun TaskContent(
 
         Divider(modifier = Modifier.height(MEDIUM_PADDING), color = MaterialTheme.colors.background)
 
-        PriorityDropDown(priority = priority, onPrioritySelect = onPriorityChange)
+        PriorityDropDown(priority = priority, onPrioritySelected = onPriorityChange)
 
         OutlinedTextField(
             modifier = Modifier.fillMaxSize(),
