@@ -1,11 +1,11 @@
 package com.example.to_docompose.ui.navigation
 
 import androidx.navigation.NavHostController
-import com.example.to_docompose.util.Action
+import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.Constants.LIST_SCREEN
 
 class Screens(navController: NavHostController) {
-    val task: (Action) -> Unit = { action ->
+    val task: (ActionLabels) -> Unit = { action ->
         navController.navigate("list/${action.name}") {
             popUpTo(LIST_SCREEN) { inclusive = true }
         }

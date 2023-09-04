@@ -1,12 +1,16 @@
 package com.example.to_docompose.domain
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.domain.repositories.DataStoreRepository
 import com.example.to_docompose.domain.repositories.ToDoRepository
 import com.example.to_docompose.redux.Middleware
 import com.example.to_docompose.redux.Store
+import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +35,10 @@ class TaskMiddleware(
         currentState: TaskViewState,
         store: Store<TaskViewState, TasksActions>
     ) {
+        Log.d("TaskMiddleware ->", action.toString())
+
         return when (action) {
+
             is TasksActions.GetAllTasks -> {
                 getAllTasks(store = store)
             }
@@ -54,15 +61,15 @@ class TaskMiddleware(
             }
 
             is TasksActions.UpdateTask -> {
-                updateTask(currentState = currentState)
+                updateTask(store = store, currentState = currentState)
             }
 
             is TasksActions.DeleteTask -> {
-                deleteTask(currentState)
+                deleteTask(store = store, currentState)
             }
 
             is TasksActions.DeleteAllTasks -> {
-                deleteAllTasks()
+                deleteAllTasks(store = store)
             }
 
             is TasksActions.SearchDatabase -> {
@@ -99,6 +106,15 @@ class TaskMiddleware(
         )
         repository.addTask(toDoTask = toDoTask)
         store.dispatch(TasksActions.UpdateAppBarState(SearchAppBarState.CLOSED))
+        store.dispatch(
+            TasksActions.FetchShowSnackBar(
+                ShowSnackBar(
+                    opened = true,
+                    label = ActionLabels.ADD,
+                    message = "ADD: ${toDoTask.title}"
+                )
+            )
+        )
     }
 
     /**
@@ -106,7 +122,10 @@ class TaskMiddleware(
      *
      * @param currentState Current state
      */
-    private suspend fun updateTask(currentState: TaskViewState) {
+    private suspend fun updateTask(
+        store: Store<TaskViewState, TasksActions>,
+        currentState: TaskViewState
+    ) {
         val toDoTask = ToDoTask(
             id = currentState.id,
             title = currentState.title,
@@ -114,6 +133,15 @@ class TaskMiddleware(
             priority = currentState.priority
         )
         repository.updateTask(toDoTask = toDoTask)
+        store.dispatch(
+            TasksActions.FetchShowSnackBar(
+                ShowSnackBar(
+                    opened = true,
+                    label = ActionLabels.UPDATE,
+                    message = "UPDATE: ${toDoTask.title}"
+                )
+            )
+        )
 
     }
 
@@ -122,7 +150,10 @@ class TaskMiddleware(
      *
      * @param currentState Current state
      */
-    private suspend fun deleteTask(currentState: TaskViewState) {
+    private suspend fun deleteTask(
+        store: Store<TaskViewState, TasksActions>,
+        currentState: TaskViewState
+    ) {
 
         val toDoTask = ToDoTask(
             id = currentState.id,
@@ -131,14 +162,33 @@ class TaskMiddleware(
             priority = currentState.priority
         )
         repository.deleteTask(toDoTask = toDoTask)
-
+        store.dispatch(
+            TasksActions.FetchShowSnackBar(
+                ShowSnackBar(
+                    opened = true,
+                    label = ActionLabels.DELETE,
+                    message = "DELETE: ${toDoTask.title}"
+                )
+            )
+        )
     }
 
     /**
      * Delete all tasks.
      */
-    private suspend fun deleteAllTasks() {
+    private suspend fun deleteAllTasks(
+        store: Store<TaskViewState, TasksActions>,
+    ) {
         repository.deleteAllTasks()
+        store.dispatch(
+            TasksActions.FetchShowSnackBar(
+                ShowSnackBar(
+                    opened = true,
+                    label = ActionLabels.DELETE,
+                    message = "All Tasks Removed"
+                )
+            )
+        )
     }
 
     /**
@@ -148,8 +198,8 @@ class TaskMiddleware(
      */
     private suspend fun getAllTasks(store: Store<TaskViewState, TasksActions>) {
         store.dispatch(
-            TasksActions.UpdateSearchedTasks(
-                MutableStateFlow<RequestState<List<ToDoTask>>>(
+            TasksActions.FetchAllTasks(
+                mutableStateOf(
                     RequestState.Loading
                 )
             )
@@ -158,8 +208,8 @@ class TaskMiddleware(
         try {
             repository.getAllTasks.collect {
                 store.dispatch(
-                    TasksActions.UpdateSearchedTasks(
-                        MutableStateFlow<RequestState<List<ToDoTask>>>(
+                    TasksActions.FetchAllTasks(
+                        mutableStateOf(
                             RequestState.Success(it)
                         )
                     )
@@ -167,8 +217,8 @@ class TaskMiddleware(
             }
         } catch (e: Exception) {
             store.dispatch(
-                TasksActions.UpdateSearchedTasks(
-                    MutableStateFlow<RequestState<List<ToDoTask>>>(
+                TasksActions.FetchAllTasks(
+                    mutableStateOf(
                         RequestState.Error(e)
                     )
                 )
@@ -194,7 +244,7 @@ class TaskMiddleware(
                     scope = scope,
                     started = SharingStarted.WhileSubscribed(),
                     initialValue = emptyList()
-                )
+                ).value
             )
         )
     }
@@ -217,7 +267,7 @@ class TaskMiddleware(
                     scope = scope,
                     started = SharingStarted.WhileSubscribed(),
                     initialValue = emptyList()
-                )
+                ).value
             )
         )
     }
@@ -234,7 +284,7 @@ class TaskMiddleware(
     ) {
         store.dispatch(
             TasksActions.UpdateSearchedTasks(
-                MutableStateFlow<RequestState<List<ToDoTask>>>(
+                mutableStateOf(
                     RequestState.Loading
                 )
             )
@@ -244,7 +294,7 @@ class TaskMiddleware(
                 .collect { searchedTasks ->
                     store.dispatch(
                         TasksActions.UpdateSearchedTasks(
-                            MutableStateFlow<RequestState<List<ToDoTask>>>(
+                            mutableStateOf(
                                 RequestState.Success(
                                     searchedTasks
                                 )
@@ -256,7 +306,7 @@ class TaskMiddleware(
         } catch (e: Exception) {
             store.dispatch(
                 TasksActions.UpdateSearchedTasks(
-                    MutableStateFlow<RequestState<List<ToDoTask>>>(
+                    mutableStateOf(
                         RequestState.Error(e)
                     )
                 )
@@ -273,7 +323,7 @@ class TaskMiddleware(
     private suspend fun getSortState(store: Store<TaskViewState, TasksActions>) {
         store.dispatch(
             TasksActions.ReadSortState(
-                MutableStateFlow<RequestState<Priority>>(
+                mutableStateOf(
                     RequestState.Loading
                 )
             )
@@ -285,7 +335,7 @@ class TaskMiddleware(
 
                     store.dispatch(
                         TasksActions.ReadSortState(
-                            MutableStateFlow<RequestState<Priority>>(
+                            mutableStateOf(
                                 RequestState.Success(it)
                             )
                         )
@@ -294,7 +344,7 @@ class TaskMiddleware(
         } catch (e: Exception) {
             store.dispatch(
                 TasksActions.ReadSortState(
-                    MutableStateFlow<RequestState<Priority>>(
+                    mutableStateOf(
                         RequestState.Error(e)
                     )
                 )
@@ -314,6 +364,28 @@ class TaskMiddleware(
             store.dispatch(
                 TasksActions.FetchSelectedTask(
                     task
+                )
+            )
+            store.dispatch(
+                TasksActions.UpdateDescription(
+                    newDescription = task.description
+                )
+            )
+            store.dispatch(
+                TasksActions.UpdateTitle(
+                    newTitle = task.title
+                )
+            )
+            store.dispatch(
+                TasksActions.UpdatePriority(
+                    newPriority = task.priority
+
+                )
+            )
+
+            store.dispatch(
+                TasksActions.UpdateId(
+                    newId = taskId
                 )
             )
         }

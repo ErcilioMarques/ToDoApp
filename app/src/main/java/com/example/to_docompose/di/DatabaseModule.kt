@@ -39,6 +39,11 @@ object DatabaseModule {
 
     @Singleton
     @Provides
+    fun provideTaskViewState(): TaskViewState {
+        return TaskViewState()
+    }
+    @Singleton
+    @Provides
     fun provideTasksStore(
         initialState: TaskViewState,
         repository: ToDoRepository,

@@ -1,5 +1,6 @@
 package com.example.to_docompose.ui.navigation.destinations
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,14 +10,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.to_docompose.ui.screens.task.TaskScreen
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
-import com.example.to_docompose.util.Action
+import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.Constants.TASK_ARGUMENT_KEY
 import com.example.to_docompose.util.Constants.TASK_SCREEN
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 fun NavGraphBuilder.taskComposable(
     sharedViewModel: SharedViewModel,
-    navigateToListScreen: (Action) -> Unit,
+    navigateToListScreen: (ActionLabels) -> Unit,
 ) {
     composable(
         route = TASK_SCREEN,
@@ -28,21 +30,21 @@ fun NavGraphBuilder.taskComposable(
     ) { navBackStackEntry ->
         val taskId = navBackStackEntry.arguments!!.getInt(TASK_ARGUMENT_KEY)
         LaunchedEffect(key1 = taskId) {
-            sharedViewModel.getSelectedTask(taskId)
+            if (taskId != -1) sharedViewModel.getSelectedTask(taskId)
 
         }
-        val selectedTask by sharedViewModel.selectedTask.collectAsState()
+        val viewState by sharedViewModel.viewState.collectAsState()
 
-        LaunchedEffect(key1 = selectedTask) {
-            if (selectedTask != null || taskId == -1) {
-                sharedViewModel.updateTaskFields(selectedTask = selectedTask)
+        LaunchedEffect(key1 = viewState.selectedTask) {
+            if (viewState.selectedTask != null || taskId == -1) {
+                sharedViewModel.updateTaskFields(selectedTask = viewState.selectedTask)
             }
         }
 
         TaskScreen(
             navigateToListScreen = navigateToListScreen,
             sharedViewModel = sharedViewModel,
-            selectedTask = selectedTask
+            selectedTask = viewState.selectedTask
         )
     }
 }

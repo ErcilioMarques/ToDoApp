@@ -1,5 +1,6 @@
 package com.example.to_docompose.ui.screens.list
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -58,7 +59,8 @@ import com.example.to_docompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.example.to_docompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.to_docompose.ui.theme.taskItemBackgroundColor
 import com.example.to_docompose.ui.theme.taskItemTextColor
-import com.example.to_docompose.util.Action
+import com.example.to_docompose.ui.viewmodels.SharedViewModel
+import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.delay
@@ -74,8 +76,10 @@ fun ListContent(
     sortState: RequestState<Priority>,
     searchAppBarState: SearchAppBarState,
     onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
-    navigateToTaskScreen: (taskId: Int) -> Unit
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
+    Log.d("ListCon", "List OCntent-> ${allTasks}${sortState}")
     if (sortState is RequestState.Success) {
         when {
             searchAppBarState == SearchAppBarState.TRIGGERED -> {
@@ -83,7 +87,8 @@ fun ListContent(
                     HandleListContent(
                         tasks = searchedTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
-                        navigateToTaskScreen = navigateToTaskScreen
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        sharedViewModel = sharedViewModel
                     )
                 }
             }
@@ -93,7 +98,8 @@ fun ListContent(
                     HandleListContent(
                         tasks = allTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
-                        navigateToTaskScreen = navigateToTaskScreen
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        sharedViewModel = sharedViewModel
                     )
                 }
             }
@@ -102,7 +108,8 @@ fun ListContent(
                 HandleListContent(
                     tasks = lowPriorityTasks,
                     onSwipeToDelete = onSwipeToDelete,
-                    navigateToTaskScreen = navigateToTaskScreen
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    sharedViewModel = sharedViewModel
                 )
             }
 
@@ -110,7 +117,8 @@ fun ListContent(
                 HandleListContent(
                     tasks = highPriorityTasks,
                     onSwipeToDelete = onSwipeToDelete,
-                    navigateToTaskScreen = navigateToTaskScreen
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    sharedViewModel = sharedViewModel
                 )
             }
         }
@@ -122,7 +130,8 @@ fun ListContent(
 fun HandleListContent(
     tasks: List<ToDoTask>,
     onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
-    navigateToTaskScreen: (taskId: Int) -> Unit
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
     if (tasks.isEmpty()) {
         EmptyContent()
@@ -130,7 +139,8 @@ fun HandleListContent(
         DisplayTasks(
             tasks = tasks,
             onSwipeToDelete = onSwipeToDelete,
-            navigateToTaskScreen = navigateToTaskScreen
+            navigateToTaskScreen = navigateToTaskScreen,
+            sharedViewModel = sharedViewModel
         )
     }
 }
@@ -140,7 +150,8 @@ fun HandleListContent(
 fun DisplayTasks(
     tasks: List<ToDoTask>,
     onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
-    navigateToTaskScreen: (taskId: Int) -> Unit
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
     LazyColumn {
         items(
@@ -195,7 +206,10 @@ fun DisplayTasks(
                     dismissContent = {
                         TaskItem(
                             toDoTask = task,
-                            navigateToTaskScreen = navigateToTaskScreen
+                            navigateToTaskScreen = {
+                                sharedViewModel.getSelectedTask(taskId = task.id)
+                                navigateToTaskScreen(it)
+                            }
                         )
                     }
                 )

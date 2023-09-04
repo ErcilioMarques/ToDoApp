@@ -10,20 +10,12 @@ import com.example.to_docompose.domain.TasksStore
 import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.domain.models.ToDoTask
-import com.example.to_docompose.domain.repositories.DataStoreRepository
-import com.example.to_docompose.domain.repositories.ToDoRepository
-import com.example.to_docompose.redux.Store
-import com.example.to_docompose.util.Action
-import com.example.to_docompose.util.Constants.MAX_TITLE_LENGTH
-import com.example.to_docompose.util.RequestState
+import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,45 +25,12 @@ class SharedViewModel @Inject constructor(
 ) : ViewModel() {
     val viewState: StateFlow<TaskViewState> = store.state
 
-    var action by mutableStateOf(Action.NO_ACTION)
+    var action by mutableStateOf(ActionLabels.NO_ACTION)
         private set
 
-    //
-//    var id by mutableStateOf(0)
-//        private set
-//    var title by mutableStateOf("")
-//        private set
-//    var description by mutableStateOf("")
-//        private set
-//    var priority by mutableStateOf(Priority.LOW)
-//        private set
-//
-//    var searchAppBarState by mutableStateOf(SearchAppBarState.CLOSED)
-//        private set
-//    var searchTextState by mutableStateOf("")
-//        private set
-//
-//    private val _allTasks =
-//        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
-//    val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
-//
-//    private val _searchedTasks =
-//        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
-//    val searchedTasks: StateFlow<RequestState<List<ToDoTask>>> = _searchedTasks
-//
-//    private val _sortState =
-//        MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
-//    val sortState: StateFlow<RequestState<Priority>> = _sortState
-//
-//    private val _selectedTask: MutableStateFlow<ToDoTask?> = MutableStateFlow(null)
-//    val selectedTask: StateFlow<ToDoTask?> = _selectedTask
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            store.dispatch(TasksActions.GetAllTasks)
-            store.dispatch(TasksActions.GetSortState)
-
-        }
-
+        getAllTasks()
+        readSortState()
     }
 
     fun dispatchActions(action: TasksActions) {
@@ -116,7 +75,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun readSortState() {
+    private fun readSortState() {
         viewModelScope.launch(Dispatchers.IO) {
             viewModelScope.launch(Dispatchers.IO) {
                 store.dispatch(
@@ -134,7 +93,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    private fun getAllTasks() {
+     private fun getAllTasks() {
 
         viewModelScope.launch {
             store.dispatch(
@@ -151,58 +110,58 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    private fun addTask() {
+     fun addTask() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.AddTask)
         }
     }
 
-    private fun updateTask() {
+     fun updateTask() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.UpdateTask)
         }
     }
 
-    private fun deleteTask() {
+     fun deleteTask() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.DeleteTask)
         }
     }
 
-    private fun deleteAllTasks() {
+     fun deleteAllTasks() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.DeleteTask)
 
         }
     }
 
-    fun handleDatabaseActions(action: Action) {
-        when (action) {
-            Action.ADD -> {
-                addTask()
-            }
-
-            Action.UPDATE -> {
-                updateTask()
-            }
-
-            Action.DELETE -> {
-                deleteTask()
-            }
-
-            Action.DELETE_ALL -> {
-                deleteAllTasks()
-            }
-
-            Action.UNDO -> {
-                addTask()
-            }
-
-            else -> {
-
-            }
-        }
-    }
+//    fun handleDatabaseActions(action: ActionLabels) {
+//        when (action) {
+//            ActionLabels.ADD -> {
+//                addTask()
+//            }
+//
+//            ActionLabels.UPDATE -> {
+//                updateTask()
+//            }
+//
+//            ActionLabels.DELETE -> {
+//                deleteTask()
+//            }
+//
+//            ActionLabels.DELETE_ALL -> {
+//                deleteAllTasks()
+//            }
+//
+//            ActionLabels.UNDO -> {
+//                addTask()
+//            }
+//
+//            else -> {
+//
+//            }
+//        }
+//    }
 
     fun updateTaskFields(selectedTask: ToDoTask?) {
         viewModelScope.launch(Dispatchers.IO) {

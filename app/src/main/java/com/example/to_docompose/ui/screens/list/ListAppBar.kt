@@ -43,7 +43,6 @@ import com.example.to_docompose.ui.theme.Typography
 import com.example.to_docompose.ui.theme.topAppBarBackgroundColor
 import com.example.to_docompose.ui.theme.topAppBarContentColor
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
-import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
 
 @Composable
@@ -58,7 +57,7 @@ fun ListAppBar(
             }, onSortClicked = {
                 sharedViewModel.persistSortState(it)
             }, onDeleteAllConfirmed = {
-                sharedViewModel.updateAction(newAction = Action.DELETE_ALL)
+                sharedViewModel.deleteAllTasks()
             })
         }
 

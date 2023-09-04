@@ -19,27 +19,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.to_docompose.R
+import com.example.to_docompose.domain.TasksActions
 import com.example.to_docompose.ui.components.DisplayAlertDialog
 import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.ui.theme.topAppBarBackgroundColor
 import com.example.to_docompose.ui.theme.topAppBarContentColor
-import com.example.to_docompose.util.Action
+import com.example.to_docompose.ui.viewmodels.SharedViewModel
+import com.example.to_docompose.util.ActionLabels
 
 @Composable
 fun TaskAppBar(
-    selectedTask: ToDoTask?, navigateToListScreen: (Action) -> Unit
+    sharedViewModel: SharedViewModel,
+    selectedTask: ToDoTask?, navigateToListScreen: (ActionLabels) -> Unit
 ) {
     if (selectedTask == null) {
-        NewTaskAppBar(navigateToListScreen = navigateToListScreen)
+        NewTaskAppBar(
+            sharedViewModel = sharedViewModel,
+            navigateToListScreen = navigateToListScreen
+        )
     } else {
-        ExistingTaskAppBar(navigateToListScreen = navigateToListScreen, selectedTask = selectedTask)
+        ExistingTaskAppBar(
+            sharedViewModel = sharedViewModel,
+            navigateToListScreen = navigateToListScreen,
+            selectedTask = selectedTask
+        )
     }
 }
 
 @Composable
 fun NewTaskAppBar(
-    navigateToListScreen: (Action) -> Unit
+    sharedViewModel: SharedViewModel,
+    navigateToListScreen: (ActionLabels) -> Unit
 ) {
     TopAppBar(navigationIcon = {
         BackAction(onBackClicked = navigateToListScreen)
@@ -49,13 +60,17 @@ fun NewTaskAppBar(
             color = MaterialTheme.colors.topAppBarContentColor
         )
     }, backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor, actions = {
-        AddAction(onAddClicked = navigateToListScreen)
+        AddAction(onAddClicked = {
+            sharedViewModel.addTask()
+            navigateToListScreen(ActionLabels.ADD)
+        })
     })
 }
 
 @Composable
 fun ExistingTaskAppBar(
-    navigateToListScreen: (Action) -> Unit, selectedTask: ToDoTask
+    sharedViewModel: SharedViewModel,
+    navigateToListScreen: (ActionLabels) -> Unit, selectedTask: ToDoTask
 ) {
     TopAppBar(navigationIcon = {
         CloseAction(onCloseClicked = navigateToListScreen)
@@ -68,6 +83,7 @@ fun ExistingTaskAppBar(
         )
     }, backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor, actions = {
         ExistingTaskAppBarActions(
+            sharedViewModel = sharedViewModel,
             selectedTask = selectedTask,
             navigateToListScreen = navigateToListScreen
         )
@@ -76,7 +92,8 @@ fun ExistingTaskAppBar(
 
 @Composable
 fun ExistingTaskAppBarActions(
-    navigateToListScreen: (Action) -> Unit, selectedTask: ToDoTask
+    sharedViewModel: SharedViewModel,
+    navigateToListScreen: (ActionLabels) -> Unit, selectedTask: ToDoTask
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
@@ -87,7 +104,8 @@ fun ExistingTaskAppBarActions(
         openDialog = openDialog,
         closeDialog = { openDialog = false },
         onYesClicked = {
-            navigateToListScreen(Action.DELETE)
+            sharedViewModel.deleteTask()
+            navigateToListScreen(ActionLabels.DELETE)
         }
     )
 
@@ -99,9 +117,9 @@ fun ExistingTaskAppBarActions(
 
 @Composable
 fun BackAction(
-    onBackClicked: (Action) -> Unit
+    onBackClicked: (ActionLabels) -> Unit
 ) {
-    IconButton(onClick = { onBackClicked(Action.NO_ACTION) }) {
+    IconButton(onClick = { onBackClicked(ActionLabels.NO_ACTION) }) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = stringResource(R.string.back_arrow),
@@ -113,9 +131,11 @@ fun BackAction(
 
 @Composable
 fun AddAction(
-    onAddClicked: (Action) -> Unit
+    onAddClicked: (ActionLabels) -> Unit
 ) {
-    IconButton(onClick = { onAddClicked(Action.ADD) }) {
+    IconButton(onClick = {
+        onAddClicked(ActionLabels.ADD)
+    }) {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.add_task_icon),
@@ -127,9 +147,9 @@ fun AddAction(
 
 @Composable
 fun CloseAction(
-    onCloseClicked: (Action) -> Unit
+    onCloseClicked: (ActionLabels) -> Unit
 ) {
-    IconButton(onClick = { onCloseClicked(Action.NO_ACTION) }) {
+    IconButton(onClick = { onCloseClicked(ActionLabels.NO_ACTION) }) {
         Icon(
             imageVector = Icons.Filled.Close,
             contentDescription = stringResource(R.string.close_icon_task),
@@ -155,9 +175,9 @@ fun DeleteAction(
 
 @Composable
 fun UpdateAction(
-    onUpdateClicked: (Action) -> Unit
+    onUpdateClicked: (ActionLabels) -> Unit
 ) {
-    IconButton(onClick = { onUpdateClicked(Action.UPDATE) }) {
+    IconButton(onClick = { onUpdateClicked(ActionLabels.UPDATE) }) {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.update_icon),
@@ -167,21 +187,21 @@ fun UpdateAction(
     }
 }
 
-@Composable
-@Preview
-fun NewTaskAppBarPreview() {
-    NewTaskAppBar(navigateToListScreen = {})
-}
+//@Composable
+//@Preview
+//fun NewTaskAppBarPreview() {
+//    NewTaskAppBar(navigateToListScreen = {})
+//}
 
-@Composable
-@Preview
-fun ExistingTaskAppBarPreview() {
-    ExistingTaskAppBar(
-        navigateToListScreen = {}, selectedTask = ToDoTask(
-            id = 0,
-            title = "Mars Miki",
-            description = "SOme random desc",
-            priority = Priority.MEDIUM
-        )
-    )
-}
+//@Composable
+//@Preview
+//fun ExistingTaskAppBarPreview() {
+//    ExistingTaskAppBar(
+//        navigateToListScreen = {}, selectedTask = ToDoTask(
+//            id = 0,
+//            title = "Mars Miki",
+//            description = "SOme random desc",
+//            priority = Priority.MEDIUM
+//        )
+//    )
+//}
