@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.to_docompose.navigation.SetupNavigation
+import com.example.to_docompose.ui.navigation.SetupNavigation
 import com.example.to_docompose.ui.theme.ToDoComposeTheme
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.example.to_docompose.navigation.destinations
+package com.example.to_docompose.ui.navigation.destinations
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +36,7 @@ fun NavGraphBuilder.listComposable(
 
             if(action != myAction){
                 myAction = action
-                sharedViewModel.updateAction(action)
+                sharedViewModel.dispatchActions(action)
             }
         }
 

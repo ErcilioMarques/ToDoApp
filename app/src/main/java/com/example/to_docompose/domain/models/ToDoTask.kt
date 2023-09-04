@@ -1,4 +1,4 @@
-package com.example.to_docompose.data.models
+package com.example.to_docompose.domain.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

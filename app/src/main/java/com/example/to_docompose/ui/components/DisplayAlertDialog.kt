@@ -1,4 +1,4 @@
-package com.example.to_docompose.components
+package com.example.to_docompose.ui.components
 
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button

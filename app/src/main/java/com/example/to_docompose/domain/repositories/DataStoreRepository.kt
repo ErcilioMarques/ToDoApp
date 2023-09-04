@@ -1,4 +1,4 @@
-package com.example.to_docompose.data.repositories
+package com.example.to_docompose.domain.repositories
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -10,7 +10,7 @@ import com.example.to_docompose.util.Constants.PREFERENCE_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.to_docompose.data.models.Priority
+import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.util.Constants.PREFERENCE_KEY
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow

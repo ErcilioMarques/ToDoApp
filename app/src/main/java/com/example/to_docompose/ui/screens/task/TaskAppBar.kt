@@ -19,10 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.to_docompose.R
-import com.example.to_docompose.components.DisplayAlertDialog
-import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.data.models.ToDoTask
-import com.example.to_docompose.ui.theme.taskItemBackgroundColor
+import com.example.to_docompose.ui.components.DisplayAlertDialog
+import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.ui.theme.topAppBarBackgroundColor
 import com.example.to_docompose.ui.theme.topAppBarContentColor
 import com.example.to_docompose.util.Action

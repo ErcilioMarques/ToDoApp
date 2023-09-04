@@ -34,9 +34,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.to_docompose.R
-import com.example.to_docompose.components.DisplayAlertDialog
-import com.example.to_docompose.components.PriorityItem
-import com.example.to_docompose.data.models.Priority
+import com.example.to_docompose.ui.components.DisplayAlertDialog
+import com.example.to_docompose.ui.components.PriorityItem
+import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.ui.theme.LARGE_PADDING
 import com.example.to_docompose.ui.theme.TOP_APP_BAR_HEIGHT
 import com.example.to_docompose.ui.theme.Typography

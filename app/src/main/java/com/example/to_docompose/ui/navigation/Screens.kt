@@ -1,4 +1,4 @@
-package com.example.to_docompose.navigation
+package com.example.to_docompose.ui.navigation
 
 import androidx.navigation.NavHostController
 import com.example.to_docompose.util.Action

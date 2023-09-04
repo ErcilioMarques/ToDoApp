@@ -1,13 +1,12 @@
-package com.example.to_docompose.data
+package com.example.to_docompose.domain
 
-import android.icu.text.StringSearch
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.to_docompose.data.models.ToDoTask
+import com.example.to_docompose.domain.models.ToDoTask
 import kotlinx.coroutines.flow.Flow
 
 @Dao

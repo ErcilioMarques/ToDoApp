@@ -7,21 +7,21 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.data.models.ToDoTask
+import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.Action
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun TaskScreen(
     sharedViewModel: SharedViewModel,
     selectedTask: ToDoTask?,
     navigateToListScreen: (Action) -> Unit
 ) {
-    val title: String = sharedViewModel.title
-    val description: String = sharedViewModel.description
-    val priority: Priority = sharedViewModel.priority
+    val title: String = sharedViewModel.viewState.value.title
+    val description: String = sharedViewModel.viewState.value.description
+    val priority: Priority = sharedViewModel.viewState.value.priority
     val context = LocalContext.current
 
     BackHandler {

@@ -5,10 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.data.models.ToDoTask
-import com.example.to_docompose.data.repositories.DataStoreRepository
-import com.example.to_docompose.data.repositories.ToDoRepository
+import com.example.to_docompose.domain.TasksActions
+import com.example.to_docompose.domain.TasksStore
+import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.TaskViewState
+import com.example.to_docompose.domain.models.ToDoTask
+import com.example.to_docompose.domain.repositories.DataStoreRepository
+import com.example.to_docompose.domain.repositories.ToDoRepository
+import com.example.to_docompose.redux.Store
 import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.Constants.MAX_TITLE_LENGTH
 import com.example.to_docompose.util.RequestState
@@ -25,156 +29,150 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor(
-    private val repository: ToDoRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val store: TasksStore,
 ) : ViewModel() {
+    val viewState: StateFlow<TaskViewState> = store.state
 
     var action by mutableStateOf(Action.NO_ACTION)
         private set
 
-    var id by mutableStateOf(0)
-        private set
-    var title by mutableStateOf("")
-        private set
-    var description by mutableStateOf("")
-        private set
-    var priority by mutableStateOf(Priority.LOW)
-        private set
-
-    var searchAppBarState by mutableStateOf(SearchAppBarState.CLOSED)
-        private set
-    var searchTextState by mutableStateOf("")
-        private set
-
-    private val _allTasks =
-        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
-    val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
-
-    private val _searchedTasks =
-        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
-    val searchedTasks: StateFlow<RequestState<List<ToDoTask>>> = _searchedTasks
-
-    private val _sortState =
-        MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
-    val sortState: StateFlow<RequestState<Priority>> = _sortState
-
-    private val _selectedTask: MutableStateFlow<ToDoTask?> = MutableStateFlow(null)
-    val selectedTask: StateFlow<ToDoTask?> = _selectedTask
+    //
+//    var id by mutableStateOf(0)
+//        private set
+//    var title by mutableStateOf("")
+//        private set
+//    var description by mutableStateOf("")
+//        private set
+//    var priority by mutableStateOf(Priority.LOW)
+//        private set
+//
+//    var searchAppBarState by mutableStateOf(SearchAppBarState.CLOSED)
+//        private set
+//    var searchTextState by mutableStateOf("")
+//        private set
+//
+//    private val _allTasks =
+//        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
+//    val allTasks: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
+//
+//    private val _searchedTasks =
+//        MutableStateFlow<RequestState<List<ToDoTask>>>(RequestState.Idle)
+//    val searchedTasks: StateFlow<RequestState<List<ToDoTask>>> = _searchedTasks
+//
+//    private val _sortState =
+//        MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
+//    val sortState: StateFlow<RequestState<Priority>> = _sortState
+//
+//    private val _selectedTask: MutableStateFlow<ToDoTask?> = MutableStateFlow(null)
+//    val selectedTask: StateFlow<ToDoTask?> = _selectedTask
     init {
-        getAllTasks()
-        readSortState()
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.GetAllTasks)
+            store.dispatch(TasksActions.GetSortState)
+
+        }
+
+    }
+
+    fun dispatchActions(action: TasksActions) {
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(
+                action
+            )
+        }
     }
 
     fun searchDatabase(searchQuery: String) {
-        _searchedTasks.value = RequestState.Loading
-        try {
-            viewModelScope.launch {
-                repository.searchDatabase(searchQuery = "%$searchQuery%")
-                    .collect { searchedTasks ->
-                        _searchedTasks.value = RequestState.Success(searchedTasks)
-                    }
-            }
-        } catch (e: Exception) {
-            _searchedTasks.value = RequestState.Error(e)
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(
+                TasksActions.SearchDatabase(searchQuery)
+            )
         }
-        searchAppBarState = SearchAppBarState.TRIGGERED
     }
 
-    val lowPriorityTasks: StateFlow<List<ToDoTask>> =
-        repository.sortByLowPriority.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = emptyList()
-        )
-
-    val highPriorityTasks: StateFlow<List<ToDoTask>> =
-        repository.sortByHighPriority.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = emptyList()
-        )
-
-    private fun readSortState() {
-        _sortState.value = RequestState.Loading
-        try {
-            viewModelScope.launch {
-                dataStoreRepository.readSortState
-                    .map { Priority.valueOf(it) }
-                    .collect {
-                        _sortState.value = RequestState.Success(it)
-                    }
+    fun getLowPriorityTasks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                store.dispatch(
+                    TasksActions.GetAllLowPriorityTasks(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed()
+                    )
+                )
             }
-        } catch (e: Exception) {
-            _sortState.value = RequestState.Error(e)
+        }
+    }
+
+    fun getHighPriorityTasks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                store.dispatch(
+                    TasksActions.GetAllHighPriorityTasks(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed()
+                    )
+                )
+            }
+        }
+    }
+
+    fun readSortState() {
+        viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                store.dispatch(
+                    TasksActions.GetSortState
+                )
+            }
         }
     }
 
     fun persistSortState(priority: Priority) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.persistSortState(priority = priority)
+            store.dispatch(
+                TasksActions.PersistSortState(priority = priority)
+            )
         }
     }
 
     private fun getAllTasks() {
-        _allTasks.value = RequestState.Loading
-        try {
-            viewModelScope.launch {
-                repository.getAllTasks.collect {
-                    _allTasks.value = RequestState.Success(it)
-                }
-            }
-        } catch (e: Exception) {
-            _allTasks.value = RequestState.Error(e)
+
+        viewModelScope.launch {
+            store.dispatch(
+                TasksActions.GetAllTasks
+            )
         }
     }
 
     fun getSelectedTask(taskId: Int) {
         viewModelScope.launch {
-            repository.getSelectedTask(taskId = taskId).collect { task ->
-                _selectedTask.value = task
-            }
+            store.dispatch(
+                TasksActions.GetSelectedTask(taskId = taskId)
+            )
         }
     }
 
     private fun addTask() {
         viewModelScope.launch(Dispatchers.IO) {
-            val toDoTask = ToDoTask(
-                title = title,
-                description = description,
-                priority = priority
-            )
-            repository.addTask(toDoTask = toDoTask)
+            store.dispatch(TasksActions.AddTask)
         }
-        searchAppBarState = SearchAppBarState.CLOSED
     }
 
     private fun updateTask() {
         viewModelScope.launch(Dispatchers.IO) {
-            val toDoTask = ToDoTask(
-                id = id,
-                title = title,
-                description = description,
-                priority = priority
-            )
-            repository.updateTask(toDoTask = toDoTask)
+            store.dispatch(TasksActions.UpdateTask)
         }
     }
 
     private fun deleteTask() {
         viewModelScope.launch(Dispatchers.IO) {
-            val toDoTask = ToDoTask(
-                id = id,
-                title = title,
-                description = description,
-                priority = priority
-            )
-            repository.deleteTask(toDoTask = toDoTask)
+            store.dispatch(TasksActions.DeleteTask)
         }
     }
 
     private fun deleteAllTasks() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAllTasks()
+            store.dispatch(TasksActions.DeleteTask)
+
         }
     }
 
@@ -183,18 +181,23 @@ class SharedViewModel @Inject constructor(
             Action.ADD -> {
                 addTask()
             }
+
             Action.UPDATE -> {
                 updateTask()
             }
+
             Action.DELETE -> {
                 deleteTask()
             }
+
             Action.DELETE_ALL -> {
                 deleteAllTasks()
             }
+
             Action.UNDO -> {
                 addTask()
             }
+
             else -> {
 
             }
@@ -202,47 +205,47 @@ class SharedViewModel @Inject constructor(
     }
 
     fun updateTaskFields(selectedTask: ToDoTask?) {
-        if (selectedTask != null) {
-            id = selectedTask.id
-            title = selectedTask.title
-            description = selectedTask.description
-            priority = selectedTask.priority
-        } else {
-            id = 0
-            title = ""
-            description = ""
-            priority = Priority.LOW
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.UpdateTaskFields(selectedTask = selectedTask))
         }
     }
 
     fun updateTitle(newTitle: String) {
-        if (newTitle.length < MAX_TITLE_LENGTH) {
-            title = newTitle
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.UpdateTitle(newTitle = newTitle))
         }
     }
 
     fun updateDescription(newDescription: String) {
-        description = newDescription
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.UpdateDescription(newDescription = newDescription))
+        }
     }
 
     fun updatePriority(newPriority: Priority) {
-        priority = newPriority
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.UpdatePriority(newPriority = newPriority))
+        }
     }
 
-    fun updateAction(newAction: Action) {
-        action = newAction
-    }
+//    fun updateAction(newAction: Action) {
+//        action = newAction
+//    }
 
     fun updateAppBarState(newState: SearchAppBarState) {
-        searchAppBarState = newState
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.UpdateAppBarState(newSearchAppBarState = newState))
+        }
     }
 
     fun updateSearchText(newText: String) {
-        searchTextState = newText
+        viewModelScope.launch(Dispatchers.IO) {
+            store.dispatch(TasksActions.UpdateSearchText(newText = newText))
+        }
     }
 
     fun validateFields(): Boolean {
-        return title.isNotEmpty() && description.isNotEmpty()
+        return store.state.value.title.isNotEmpty() && store.state.value.description.isNotEmpty()
     }
 
 }

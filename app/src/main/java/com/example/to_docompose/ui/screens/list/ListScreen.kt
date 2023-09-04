@@ -20,45 +20,49 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.to_docompose.R
+import com.example.to_docompose.domain.TasksActions
+import com.example.to_docompose.domain.TasksStore
 import com.example.to_docompose.ui.theme.fabBackground
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
-import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun ListScreen(
-    action: Action,
+    store: TasksStore,
+    action: TasksActions,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
 
     LaunchedEffect(key1 = action) {
-        sharedViewModel.handleDatabaseActions(action = action)
+//        sharedViewModel.handleDatabaseActions(action = action)
+        store.dispatch(action)
+
     }
 
-    val allTasks by sharedViewModel.allTasks.collectAsState()
-    val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
+    val allTasks by sharedViewModel.viewState.value.allTasks.collectAsState()
+    val searchedTasks by sharedViewModel.viewState.value.searchedTasks.collectAsState()
 
-    val sortState by sharedViewModel.sortState.collectAsState()
-    val lowPriorityTasks by sharedViewModel.lowPriorityTasks.collectAsState()
-    val highPriorityTasks by sharedViewModel.highPriorityTasks.collectAsState()
+    val sortState by sharedViewModel.viewState.value.sortState.collectAsState()
+    val lowPriorityTasks by sharedViewModel.viewState.value.lowPriorityTasks.collectAsState()
+    val highPriorityTasks by sharedViewModel.viewState.value.highPriorityTasks.collectAsState()
 
-    val searchAppBarState: SearchAppBarState = sharedViewModel.searchAppBarState
-    val searchTextState: String = sharedViewModel.searchTextState
+    val searchAppBarState: SearchAppBarState = sharedViewModel.viewState.value.searchAppBarState
+    val searchTextState: String = sharedViewModel.viewState.value.searchTextState
 
 
     val scaffoldState = rememberScaffoldState()
 
     DisplaySnackBar(
         scaffoldState = scaffoldState,
-        onComplete = { sharedViewModel.updateAction(newAction = it) },
+        onComplete = { sharedViewModel.dispatchActions(it) },
         onUndoClicked = {
-            sharedViewModel.updateAction(newAction = it)
+            sharedViewModel.dispatchActions(it)
         },
-        taskTitle = sharedViewModel.title,
+        taskTitle = sharedViewModel.viewState.value.title,
         action = action
     )
 
@@ -80,7 +84,7 @@ fun ListScreen(
                 searchedTasks = searchedTasks,
                 searchAppBarState = searchAppBarState,
                 onSwipeToDelete = { action, task ->
-                    sharedViewModel.updateAction(newAction = action)
+                    sharedViewModel.dispatchActions(action)
                     sharedViewModel.updateTaskFields(selectedTask = task)
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                 },
@@ -114,15 +118,15 @@ fun ListFab(
 @Composable
 fun DisplaySnackBar(
     scaffoldState: ScaffoldState,
-    onComplete: (Action) -> Unit,
-    onUndoClicked: (Action) -> Unit,
+    onComplete: (TasksActions) -> Unit,
+    onUndoClicked: (TasksActions) -> Unit,
     taskTitle: String,
-    action: Action
+    action: TasksActions
 ) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = action) {
-        if (action != Action.NO_ACTION) {
+        if (action != TasksActions.NoActions) {
             scope.launch {
                 val result = scaffoldState.snackbarHostState.showSnackbar(
                     message = setMessage(action, taskTitle),
@@ -131,20 +135,20 @@ fun DisplaySnackBar(
                 )
                 undoDeletedTask(action, result, onUndoClicked)
             }
-            onComplete(Action.NO_ACTION)
+            onComplete(TasksActions.NoActions)
         }
     }
 }
 
-private fun setMessage(action: Action, taskTitle: String): String {
+private fun setMessage(action: TasksActions, taskTitle: String): String {
     return when (action) {
-        Action.DELETE_ALL -> "All Tasks Removed"
-        else -> "${action.name}: $taskTitle"
+        TasksActions.DeleteAllTasks -> "All Tasks Removed"
+        else -> "${action}: $taskTitle"
     }
 }
 
-private fun setActionLabel(action: Action): String {
-    return if (action.name == "DELETE") {
+private fun setActionLabel(action: TasksActions): String {
+    return if (action == TasksActions.DeleteTask) {
         "UNDO"
     } else {
         "OK"
@@ -152,11 +156,11 @@ private fun setActionLabel(action: Action): String {
 }
 
 private fun undoDeletedTask(
-    action: Action,
+    action: TasksActions,
     snackBarResult: SnackbarResult,
-    onUndoClicked: (Action) -> Unit
+    onUndoClicked: (TasksActions) -> Unit
 ) {
-    if (snackBarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
-        onUndoClicked(Action.UNDO)
+    if (snackBarResult == SnackbarResult.ActionPerformed && action == TasksActions.DeleteTask) {
+        onUndoClicked(TasksActions.UndoDeleteTask)
     }
 }

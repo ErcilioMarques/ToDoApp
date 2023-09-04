@@ -48,8 +48,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.to_docompose.R
-import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.data.models.ToDoTask
+import com.example.to_docompose.domain.TasksActions
+import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.ui.theme.HighPriorityColor
 import com.example.to_docompose.ui.theme.LARGEST_PADDING
 import com.example.to_docompose.ui.theme.LARGE_PADDING
@@ -72,7 +73,7 @@ fun ListContent(
     highPriorityTasks: List<ToDoTask>,
     sortState: RequestState<Priority>,
     searchAppBarState: SearchAppBarState,
-    onSwipeToDelete: (Action, ToDoTask) -> Unit,
+    onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit
 ) {
     if (sortState is RequestState.Success) {
@@ -120,7 +121,7 @@ fun ListContent(
 @Composable
 fun HandleListContent(
     tasks: List<ToDoTask>,
-    onSwipeToDelete: (Action, ToDoTask) -> Unit,
+    onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit
 ) {
     if (tasks.isEmpty()) {
@@ -138,7 +139,7 @@ fun HandleListContent(
 @Composable
 fun DisplayTasks(
     tasks: List<ToDoTask>,
-    onSwipeToDelete: (Action, ToDoTask) -> Unit,
+    onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
     navigateToTaskScreen: (taskId: Int) -> Unit
 ) {
     LazyColumn {
@@ -156,7 +157,7 @@ fun DisplayTasks(
                 SideEffect {
                     scope.launch {
                         delay(300)
-                        onSwipeToDelete(Action.DELETE, task)
+                        onSwipeToDelete(TasksActions.DeleteTask, task)
                     }
                 }
             }
