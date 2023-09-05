@@ -163,7 +163,6 @@ fun DisplayTasks(
             }
         ) { task ->
 
-            Log.d("List", "Items -> ${task.title}")
             val dismissState = rememberDismissState()
             val dismissDirection = dismissState.dismissDirection
             val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)

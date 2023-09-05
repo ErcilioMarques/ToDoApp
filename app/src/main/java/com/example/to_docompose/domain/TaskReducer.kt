@@ -90,6 +90,10 @@ class TaskReducer : Reducer<TaskViewState, TasksActions> {
 
             }
 
+            is TasksActions.NoActions->{
+                currentState.copy(selectedTask = null, title = "", description = "", priority = Priority.LOW, id = -1)
+            }
+
             else -> currentState
         }
     }

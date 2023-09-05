@@ -39,10 +39,6 @@ fun TaskAppBar(
 
     val viewState by sharedViewModel.viewState.collectAsState()
 
-LaunchedEffect(key1 = viewState.selectedTask){
-    Log.d("Task", "SelectedTask -> ${viewState.title}")
-}
-
     if (viewState.selectedTask == null) {
         NewTaskAppBar(
             sharedViewModel = sharedViewModel,
@@ -122,7 +118,10 @@ fun ExistingTaskAppBarActions(
     DeleteAction(onDeleteClicked = {
         openDialog = true
     })
-    UpdateAction(onUpdateClicked = navigateToListScreen)
+    UpdateAction(onUpdateClicked = {
+        sharedViewModel.updateTask()
+        navigateToListScreen(it)
+    })
 }
 
 @Composable

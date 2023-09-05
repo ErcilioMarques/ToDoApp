@@ -1,7 +1,6 @@
 package com.example.to_docompose.domain
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.TaskViewState
@@ -14,7 +13,6 @@ import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -356,40 +354,43 @@ class TaskMiddleware(
      * @param taskId Task id
      */
     private suspend fun getSelectedTask(store: Store<TaskViewState, TasksActions>, taskId: Int) {
-        repository.getSelectedTask(taskId = taskId).collect { task ->
-            store.dispatch(
-                TasksActions.FetchSelectedTask(
-                    selectedTask = task
-                )
-            )
-            if (task != null) {
-                store.dispatch(
-                    TasksActions.UpdateDescription(
-                        newDescription = task.description
-                    )
-                )
-                store.dispatch(
-                    TasksActions.UpdateTitle(
-                        newTitle = task.title
-                    )
-                )
-                store.dispatch(
-                    TasksActions.UpdatePriority(
-                        newPriority = task.priority
 
-                    )
-                )
-
+        if (taskId == -1) {
+            store.dispatch(TasksActions.NoActions)
+        } else {
+            repository.getSelectedTask(taskId = taskId).collect { task ->
                 store.dispatch(
-                    TasksActions.UpdateId(
-                        newId = taskId
+                    TasksActions.FetchSelectedTask(
+                        selectedTask = task
                     )
                 )
+                if (task != null) {
+                    store.dispatch(
+                        TasksActions.UpdateDescription(
+                            newDescription = task.description
+                        )
+                    )
+                    store.dispatch(
+                        TasksActions.UpdateTitle(
+                            newTitle = task.title
+                        )
+                    )
+                    store.dispatch(
+                        TasksActions.UpdatePriority(
+                            newPriority = task.priority
+
+                        )
+                    )
+
+                    store.dispatch(
+                        TasksActions.UpdateId(
+                            newId = taskId
+                        )
+                    )
+                }
             }
-
         }
     }
-
 
     /**
      * Persist sort state.
