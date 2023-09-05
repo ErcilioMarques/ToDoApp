@@ -282,9 +282,7 @@ class TaskMiddleware(
     ) {
         store.dispatch(
             TasksActions.UpdateSearchedTasks(
-
                 RequestState.Loading
-
             )
         )
         try {
@@ -292,11 +290,9 @@ class TaskMiddleware(
                 .collect { searchedTasks ->
                     store.dispatch(
                         TasksActions.UpdateSearchedTasks(
-
                             RequestState.Success(
                                 searchedTasks
                             )
-
                         )
                     )
                 }
@@ -304,13 +300,11 @@ class TaskMiddleware(
         } catch (e: Exception) {
             store.dispatch(
                 TasksActions.UpdateSearchedTasks(
-
                     RequestState.Error(e)
                 )
 
             )
         }
-        store.dispatch(TasksActions.UpdateAppBarState(SearchAppBarState.TRIGGERED))
     }
 
     /**

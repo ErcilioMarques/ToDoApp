@@ -39,6 +39,9 @@ fun ListScreen(
 
     val viewState by sharedViewModel.viewState.collectAsState()
 
+    LaunchedEffect(key1 = viewState.searchAppBarState ){
+        Log.d("ListScreen", "viewState.searchAppBarState ->${viewState.searchAppBarState}")
+    }
 
     val scaffoldState = rememberScaffoldState()
 

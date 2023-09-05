@@ -69,6 +69,8 @@ fun ListAppBar(
             },
             onSearchClicked = {
                 sharedViewModel.searchDatabase(searchQuery = it)
+                sharedViewModel.updateAppBarState(SearchAppBarState.TRIGGERED)
+
             })
 
     }
