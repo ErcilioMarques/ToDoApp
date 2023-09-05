@@ -16,7 +16,7 @@ class TaskReducer : Reducer<TaskViewState, TasksActions> {
 
         return when (action) {
             is TasksActions.FetchAllTasks -> {
-                Log.d("Reducer", "TaskReducer ->${action.newAllTasks.value.toString()}")
+                Log.d("Reducer", "TaskReducer ->${action.newAllTasks.toString()}")
                 currentState.copy(allTasks = action.newAllTasks)
             }
 
@@ -80,12 +80,14 @@ class TaskReducer : Reducer<TaskViewState, TasksActions> {
             is TasksActions.FetchShowSnackBar -> {
                 currentState.copy(showSnackBar = action.newShowSnackBar)
             }
-            is TasksActions.FetchSelectedTask -> {
-                action.selectedTask?.let {
-                    currentState.copy(selectedTask = it, title = it.title, description = it.description, priority = it.priority, id = it.id)
-                }?: currentState.copy(selectedTask = null)
 
-                currentState
+            is TasksActions.FetchSelectedTask -> {
+                if (action.selectedTask != null) {
+                    currentState.copy(selectedTask = action.selectedTask)
+                } else {
+                    currentState
+                }
+
             }
 
             else -> currentState

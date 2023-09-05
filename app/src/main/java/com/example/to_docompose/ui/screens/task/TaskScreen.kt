@@ -20,7 +20,6 @@ import com.example.to_docompose.util.ActionLabels
 @Composable
 fun TaskScreen(
     sharedViewModel: SharedViewModel,
-    selectedTask: ToDoTask?,
     navigateToListScreen: (ActionLabels) -> Unit
 ) {
     val context = LocalContext.current
@@ -36,7 +35,7 @@ fun TaskScreen(
 
     Scaffold(
         topBar = {
-            TaskAppBar(sharedViewModel = sharedViewModel,selectedTask = selectedTask, navigateToListScreen = {
+            TaskAppBar(sharedViewModel = sharedViewModel,selectedTask = viewState.selectedTask, navigateToListScreen = {
                     action ->
 
                 if (action == ActionLabels.NO_ACTION) {

@@ -1,6 +1,7 @@
 package com.example.to_docompose.ui.navigation.destinations
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,6 +31,7 @@ fun NavGraphBuilder.taskComposable(
     ) { navBackStackEntry ->
         val taskId = navBackStackEntry.arguments!!.getInt(TASK_ARGUMENT_KEY)
         LaunchedEffect(key1 = taskId) {
+            Log.d("T", "TaskCOm - > ${taskId}")
             if (taskId != -1) sharedViewModel.getSelectedTask(taskId)
 
         }
@@ -44,7 +46,6 @@ fun NavGraphBuilder.taskComposable(
         TaskScreen(
             navigateToListScreen = navigateToListScreen,
             sharedViewModel = sharedViewModel,
-            selectedTask = viewState.selectedTask
         )
     }
 }

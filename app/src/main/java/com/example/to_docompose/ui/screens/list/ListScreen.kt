@@ -22,13 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.to_docompose.R
 import com.example.to_docompose.domain.TasksActions
-import com.example.to_docompose.domain.TasksStore
 import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.ui.theme.fabBackground
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.ActionLabels
-import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -46,9 +44,16 @@ fun ListScreen(
 
     DisplaySnackBar(
         scaffoldState = scaffoldState,
-        onComplete = { sharedViewModel.dispatchActions(it) },
-        onUndoClicked = {
-            sharedViewModel.dispatchActions(it)
+        onComplete = {
+            sharedViewModel.dispatchActions(
+                TasksActions.FetchShowSnackBar(
+                    ShowSnackBar(
+                        opened = false,
+                        message = "",
+                        label = it
+                    )
+                )
+            )
         },
         taskTitle = sharedViewModel.viewState.value.title,
         viewState = viewState,
@@ -66,11 +71,11 @@ fun ListScreen(
         },
         content = {
             ListContent(
-                allTasks = viewState.allTasks.value,
+                allTasks = viewState.allTasks,
                 lowPriorityTasks = viewState.lowPriorityTasks,
                 highPriorityTasks = viewState.highPriorityTasks,
-                sortState = viewState.sortState.value,
-                searchedTasks = viewState.searchedTasks.value,
+                sortState = viewState.sortState,
+                searchedTasks = viewState.searchedTasks,
                 searchAppBarState = viewState.searchAppBarState,
                 onSwipeToDelete = { action, task ->
                     sharedViewModel.dispatchActions(action)
@@ -108,8 +113,7 @@ fun ListFab(
 @Composable
 fun DisplaySnackBar(
     scaffoldState: ScaffoldState,
-    onComplete: (TasksActions) -> Unit,
-    onUndoClicked: (TasksActions) -> Unit,
+    onComplete: (ActionLabels) -> Unit,
     taskTitle: String,
     viewState: TaskViewState,
     sharedViewModel: SharedViewModel
@@ -124,10 +128,14 @@ fun DisplaySnackBar(
                     actionLabel = setActionLabel(viewState.showSnackBar.label),
                     duration = SnackbarDuration.Short
                 )
-                undoDeletedTask(viewState.showSnackBar.label, result, onUndoClicked)
+                undoDeletedTask(
+                    action = viewState.showSnackBar.label,
+                    snackBarResult = result,
+                    sharedViewModel = sharedViewModel
+                   )
             }
-            onComplete(TasksActions.NoActions)
-            sharedViewModel.UpdateShowSnackBac(ShowSnackBar())
+            onComplete(ActionLabels.NO_ACTION)
+            sharedViewModel.updateShowSnackBar(ShowSnackBar())
         }
     }
 }
@@ -150,9 +158,9 @@ private fun setActionLabel(action: ActionLabels): String {
 private fun undoDeletedTask(
     action: ActionLabels,
     snackBarResult: SnackbarResult,
-    onUndoClicked: (TasksActions) -> Unit
+    sharedViewModel: SharedViewModel
 ) {
     if (snackBarResult == SnackbarResult.ActionPerformed && action == ActionLabels.DELETE) {
-        onUndoClicked(TasksActions.UndoDeleteTask)
+        sharedViewModel.addTask()
     }
 }

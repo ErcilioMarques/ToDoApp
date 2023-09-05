@@ -199,9 +199,9 @@ class TaskMiddleware(
     private suspend fun getAllTasks(store: Store<TaskViewState, TasksActions>) {
         store.dispatch(
             TasksActions.FetchAllTasks(
-                mutableStateOf(
-                    RequestState.Loading
-                )
+
+                RequestState.Loading
+
             )
         )
 
@@ -209,18 +209,18 @@ class TaskMiddleware(
             repository.getAllTasks.collect {
                 store.dispatch(
                     TasksActions.FetchAllTasks(
-                        mutableStateOf(
-                            RequestState.Success(it)
-                        )
+
+                        RequestState.Success(it)
+
                     )
                 )
             }
         } catch (e: Exception) {
             store.dispatch(
                 TasksActions.FetchAllTasks(
-                    mutableStateOf(
-                        RequestState.Error(e)
-                    )
+
+                    RequestState.Error(e)
+
                 )
             )
         }
@@ -284,9 +284,9 @@ class TaskMiddleware(
     ) {
         store.dispatch(
             TasksActions.UpdateSearchedTasks(
-                mutableStateOf(
-                    RequestState.Loading
-                )
+
+                RequestState.Loading
+
             )
         )
         try {
@@ -294,11 +294,11 @@ class TaskMiddleware(
                 .collect { searchedTasks ->
                     store.dispatch(
                         TasksActions.UpdateSearchedTasks(
-                            mutableStateOf(
-                                RequestState.Success(
-                                    searchedTasks
-                                )
+
+                            RequestState.Success(
+                                searchedTasks
                             )
+
                         )
                     )
                 }
@@ -306,10 +306,10 @@ class TaskMiddleware(
         } catch (e: Exception) {
             store.dispatch(
                 TasksActions.UpdateSearchedTasks(
-                    mutableStateOf(
-                        RequestState.Error(e)
-                    )
+
+                    RequestState.Error(e)
                 )
+
             )
         }
         store.dispatch(TasksActions.UpdateAppBarState(SearchAppBarState.TRIGGERED))
@@ -323,9 +323,9 @@ class TaskMiddleware(
     private suspend fun getSortState(store: Store<TaskViewState, TasksActions>) {
         store.dispatch(
             TasksActions.ReadSortState(
-                mutableStateOf(
-                    RequestState.Loading
-                )
+
+                RequestState.Loading
+
             )
         )
         try {
@@ -335,18 +335,14 @@ class TaskMiddleware(
 
                     store.dispatch(
                         TasksActions.ReadSortState(
-                            mutableStateOf(
-                                RequestState.Success(it)
-                            )
+                            RequestState.Success(it)
                         )
                     )
                 }
         } catch (e: Exception) {
             store.dispatch(
                 TasksActions.ReadSortState(
-                    mutableStateOf(
-                        RequestState.Error(e)
-                    )
+                    RequestState.Error(e)
                 )
             )
         }
@@ -363,31 +359,34 @@ class TaskMiddleware(
         repository.getSelectedTask(taskId = taskId).collect { task ->
             store.dispatch(
                 TasksActions.FetchSelectedTask(
-                    task
+                    selectedTask = task
                 )
             )
-            store.dispatch(
-                TasksActions.UpdateDescription(
-                    newDescription = task.description
+            if (task != null) {
+                store.dispatch(
+                    TasksActions.UpdateDescription(
+                        newDescription = task.description
+                    )
                 )
-            )
-            store.dispatch(
-                TasksActions.UpdateTitle(
-                    newTitle = task.title
+                store.dispatch(
+                    TasksActions.UpdateTitle(
+                        newTitle = task.title
+                    )
                 )
-            )
-            store.dispatch(
-                TasksActions.UpdatePriority(
-                    newPriority = task.priority
+                store.dispatch(
+                    TasksActions.UpdatePriority(
+                        newPriority = task.priority
 
+                    )
                 )
-            )
 
-            store.dispatch(
-                TasksActions.UpdateId(
-                    newId = taskId
+                store.dispatch(
+                    TasksActions.UpdateId(
+                        newId = taskId
+                    )
                 )
-            )
+            }
+
         }
     }
 

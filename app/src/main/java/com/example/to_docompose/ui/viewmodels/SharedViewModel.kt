@@ -136,7 +136,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    suspend fun UpdateShowSnackBac(newShowSnackBar: ShowSnackBar){
+    suspend fun updateShowSnackBar(newShowSnackBar: ShowSnackBar){
         store.dispatch(TasksActions.FetchShowSnackBar(newShowSnackBar = newShowSnackBar))
 
     }

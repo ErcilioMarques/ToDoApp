@@ -32,11 +32,11 @@ sealed class TasksActions : Action {
     data class UpdatePriority(val newPriority: Priority) : TasksActions()
     data class UpdateAppBarState(val newSearchAppBarState: SearchAppBarState) : TasksActions()
     data class UpdateSearchText(val newText: String) : TasksActions()
-    data class ReadSortState(val newSortState: MutableState<RequestState<Priority>>) : TasksActions()
-    data class UpdateSearchedTasks(val newSearchedTasks: MutableState<RequestState<List<ToDoTask>>>) :
+    data class ReadSortState(val newSortState: RequestState<Priority>) : TasksActions()
+    data class UpdateSearchedTasks(val newSearchedTasks: RequestState<List<ToDoTask>>) :
         TasksActions()
 
-    data class FetchAllTasks(val newAllTasks: MutableState<RequestState<List<ToDoTask>>>) :
+    data class FetchAllTasks(val newAllTasks: RequestState<List<ToDoTask>>) :
         TasksActions()
 
     data class GetAllLowPriorityTasks(

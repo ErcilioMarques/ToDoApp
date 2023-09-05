@@ -33,6 +33,7 @@ import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -153,6 +154,7 @@ fun DisplayTasks(
     navigateToTaskScreen: (taskId: Int) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
+
     LazyColumn {
         items(
             items = tasks,
@@ -160,6 +162,8 @@ fun DisplayTasks(
                 task.id
             }
         ) { task ->
+
+            Log.d("List", "Items -> ${task.title}")
             val dismissState = rememberDismissState()
             val dismissDirection = dismissState.dismissDirection
             val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
@@ -207,6 +211,8 @@ fun DisplayTasks(
                         TaskItem(
                             toDoTask = task,
                             navigateToTaskScreen = {
+                                Log.d("LC", "ListCOntn - > ${task}")
+
                                 sharedViewModel.getSelectedTask(taskId = task.id)
                                 navigateToTaskScreen(it)
                             }
