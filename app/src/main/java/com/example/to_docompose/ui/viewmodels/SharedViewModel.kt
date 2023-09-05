@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.to_docompose.domain.TasksActions
 import com.example.to_docompose.domain.TasksStore
 import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.util.ActionLabels
@@ -133,6 +134,11 @@ class SharedViewModel @Inject constructor(
             store.dispatch(TasksActions.DeleteTask)
 
         }
+    }
+
+    suspend fun UpdateShowSnackBac(newShowSnackBar: ShowSnackBar){
+        store.dispatch(TasksActions.FetchShowSnackBar(newShowSnackBar = newShowSnackBar))
+
     }
 
 //    fun handleDatabaseActions(action: ActionLabels) {

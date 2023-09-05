@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.to_docompose.R
 import com.example.to_docompose.domain.TasksActions
 import com.example.to_docompose.domain.TasksStore
+import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.ui.theme.fabBackground
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
@@ -126,6 +127,7 @@ fun DisplaySnackBar(
                 undoDeletedTask(viewState.showSnackBar.label, result, onUndoClicked)
             }
             onComplete(TasksActions.NoActions)
+            sharedViewModel.UpdateShowSnackBac(ShowSnackBar())
         }
     }
 }
