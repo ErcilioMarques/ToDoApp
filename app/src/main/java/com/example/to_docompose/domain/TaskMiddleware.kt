@@ -12,10 +12,7 @@ import com.example.to_docompose.redux.Store
 import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 /**
  * Task middleware.
@@ -42,11 +39,11 @@ class TaskMiddleware(
             }
 
             is TasksActions.GetAllLowPriorityTasks -> {
-                getLowPriorityTasks(store, scope = action.scope, started = action.started)
+                getLowPriorityTasks(store)
             }
 
             is TasksActions.GetAllHighPriorityTasks -> {
-                getHighPriorityTasks(store, scope = action.scope, started = action.started)
+                getHighPriorityTasks(store)
 
             }
 
@@ -228,46 +225,62 @@ class TaskMiddleware(
      * Get low priority tasks.
      *
      * @param store Store
-     * @param scope Scope
-     * @param started Started
      */
     private suspend fun getLowPriorityTasks(
         store: Store<TaskViewState, TasksActions>,
-        scope: CoroutineScope,
-        started: SharingStarted
     ) {
         store.dispatch(
             TasksActions.FetchAllLowPriorityTasks(
-                repository.sortByLowPriority.stateIn(
-                    scope = scope,
-                    started = SharingStarted.WhileSubscribed(),
-                    initialValue = emptyList()
-                ).value
+                RequestState.Loading
             )
         )
+
+        try {
+            repository.sortByLowPriority.collect {
+                store.dispatch(
+                    TasksActions.FetchAllLowPriorityTasks(
+                        RequestState.Success(it)
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            store.dispatch(
+                TasksActions.FetchAllLowPriorityTasks(
+                    RequestState.Error(e)
+                )
+            )
+        }
     }
 
     /**
      * Get high priority tasks.
      *
      * @param store Store
-     * @param scope Scope
-     * @param started Started
      */
     private suspend fun getHighPriorityTasks(
         store: Store<TaskViewState, TasksActions>,
-        scope: CoroutineScope,
-        started: SharingStarted
     ) {
         store.dispatch(
-            TasksActions.FetchAllLowPriorityTasks(
-                repository.sortByHighPriority.stateIn(
-                    scope = scope,
-                    started = SharingStarted.WhileSubscribed(),
-                    initialValue = emptyList()
-                ).value
+            TasksActions.FetchAllHighPriorityTasks(
+                RequestState.Loading
             )
         )
+
+        try {
+            repository.sortByHighPriority.collect {
+                store.dispatch(
+                    TasksActions.FetchAllHighPriorityTasks(
+                        RequestState.Success(it)
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            store.dispatch(
+                TasksActions.FetchAllHighPriorityTasks(
+                    RequestState.Error(e)
+                )
+            )
+        }
     }
 
     /**

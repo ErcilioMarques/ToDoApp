@@ -33,7 +33,6 @@ import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,7 +60,6 @@ import com.example.to_docompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.to_docompose.ui.theme.taskItemBackgroundColor
 import com.example.to_docompose.ui.theme.taskItemTextColor
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
-import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
 import kotlinx.coroutines.delay
@@ -72,8 +70,8 @@ import kotlinx.coroutines.launch
 fun ListContent(
     allTasks: RequestState<List<ToDoTask>>,
     searchedTasks: RequestState<List<ToDoTask>>,
-    lowPriorityTasks: List<ToDoTask>,
-    highPriorityTasks: List<ToDoTask>,
+    lowPriorityTasks: RequestState<List<ToDoTask>>,
+    highPriorityTasks: RequestState<List<ToDoTask>>,
     sortState: RequestState<Priority>,
     searchAppBarState: SearchAppBarState,
     onSwipeToDelete: (TasksActions, ToDoTask) -> Unit,
@@ -105,21 +103,23 @@ fun ListContent(
             }
 
             sortState.data == Priority.LOW -> {
-                HandleListContent(
-                    tasks = lowPriorityTasks,
-                    onSwipeToDelete = onSwipeToDelete,
-                    navigateToTaskScreen = navigateToTaskScreen,
-                    sharedViewModel = sharedViewModel
-                )
+                if (lowPriorityTasks is RequestState.Success)
+                    HandleListContent(
+                        tasks = lowPriorityTasks.data,
+                        onSwipeToDelete = onSwipeToDelete,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        sharedViewModel = sharedViewModel
+                    )
             }
 
             sortState.data == Priority.HIGH -> {
-                HandleListContent(
-                    tasks = highPriorityTasks,
-                    onSwipeToDelete = onSwipeToDelete,
-                    navigateToTaskScreen = navigateToTaskScreen,
-                    sharedViewModel = sharedViewModel
-                )
+                if (highPriorityTasks is RequestState.Success)
+                    HandleListContent(
+                        tasks = highPriorityTasks.data,
+                        onSwipeToDelete = onSwipeToDelete,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        sharedViewModel = sharedViewModel
+                    )
             }
         }
     }

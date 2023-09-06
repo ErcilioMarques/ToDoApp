@@ -15,7 +15,6 @@ import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -50,27 +49,21 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun getLowPriorityTasks() {
+    private fun getLowPriorityTasks() {
         viewModelScope.launch(Dispatchers.IO) {
             viewModelScope.launch(Dispatchers.IO) {
                 store.dispatch(
-                    TasksActions.GetAllLowPriorityTasks(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed()
-                    )
+                    TasksActions.GetAllLowPriorityTasks
                 )
             }
         }
     }
 
-    fun getHighPriorityTasks() {
+    private fun getHighPriorityTasks() {
         viewModelScope.launch(Dispatchers.IO) {
             viewModelScope.launch(Dispatchers.IO) {
                 store.dispatch(
-                    TasksActions.GetAllHighPriorityTasks(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed()
-                    )
+                    TasksActions.GetAllHighPriorityTasks
                 )
             }
         }
@@ -87,6 +80,13 @@ class SharedViewModel @Inject constructor(
     }
 
     fun persistSortState(priority: Priority) {
+
+        when (priority) {
+            Priority.LOW -> getLowPriorityTasks()
+            Priority.HIGH -> getHighPriorityTasks()
+            else -> getAllTasks()
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(
                 TasksActions.PersistSortState(priority = priority)
@@ -94,7 +94,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-     private fun getAllTasks() {
+    private fun getAllTasks() {
 
         viewModelScope.launch {
             store.dispatch(
@@ -111,63 +111,35 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-     fun addTask() {
+    fun addTask() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.AddTask)
         }
     }
 
-     fun updateTask() {
+    fun updateTask() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.UpdateTask)
         }
     }
 
-     fun deleteTask() {
+    fun deleteTask() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.DeleteTask)
         }
     }
 
-     fun deleteAllTasks() {
+    fun deleteAllTasks() {
         viewModelScope.launch(Dispatchers.IO) {
             store.dispatch(TasksActions.DeleteAllTasks)
 
         }
     }
 
-    suspend fun updateShowSnackBar(newShowSnackBar: ShowSnackBar){
+    suspend fun updateShowSnackBar(newShowSnackBar: ShowSnackBar) {
         store.dispatch(TasksActions.FetchShowSnackBar(newShowSnackBar = newShowSnackBar))
 
     }
-
-//    fun handleDatabaseActions(action: ActionLabels) {
-//        when (action) {
-//            ActionLabels.ADD -> {
-//                addTask()
-//            }
-//
-//            ActionLabels.UPDATE -> {
-//                updateTask()
-//            }
-//
-//            ActionLabels.DELETE -> {
-//                deleteTask()
-//            }
-//
-//            ActionLabels.DELETE_ALL -> {
-//                deleteAllTasks()
-//            }
-//
-//            ActionLabels.UNDO -> {
-//                addTask()
-//            }
-//
-//            else -> {
-//
-//            }
-//        }
-//    }
 
     fun updateTaskFields(selectedTask: ToDoTask?) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -192,10 +164,6 @@ class SharedViewModel @Inject constructor(
             store.dispatch(TasksActions.UpdatePriority(newPriority = newPriority))
         }
     }
-
-//    fun updateAction(newAction: Action) {
-//        action = newAction
-//    }
 
     fun updateAppBarState(newState: SearchAppBarState) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -1,7 +1,5 @@
 package com.example.to_docompose.domain.models
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.example.to_docompose.redux.State
 import com.example.to_docompose.util.ActionLabels
 import com.example.to_docompose.util.RequestState
@@ -27,7 +25,9 @@ data class TaskViewState(
         RequestState.Idle,
     val searchedTasks: RequestState<List<ToDoTask>> =
         RequestState.Idle,
-    val lowPriorityTasks: List<ToDoTask> = emptyList(),
-    val highPriorityTasks: List<ToDoTask> = emptyList(),
+    val lowPriorityTasks: RequestState<List<ToDoTask>> =
+        RequestState.Idle,
+    val highPriorityTasks: RequestState<List<ToDoTask>> =
+        RequestState.Idle,
     val showSnackBar: ShowSnackBar = ShowSnackBar()
 ) : State

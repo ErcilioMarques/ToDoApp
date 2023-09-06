@@ -1,15 +1,11 @@
 package com.example.to_docompose.domain
 
-import androidx.compose.runtime.MutableState
 import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.redux.Action
 import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 
 sealed class TasksActions : Action {
     object GetAllTasks : TasksActions()
@@ -39,23 +35,17 @@ sealed class TasksActions : Action {
     data class FetchAllTasks(val newAllTasks: RequestState<List<ToDoTask>>) :
         TasksActions()
 
-    data class GetAllLowPriorityTasks(
-        val scope: CoroutineScope,
-        val started: SharingStarted
-    ) : TasksActions()
+    object GetAllLowPriorityTasks: TasksActions()
 
-    data class GetAllHighPriorityTasks(
-        val scope: CoroutineScope,
-        val started: SharingStarted
-    ) : TasksActions()
+    object GetAllHighPriorityTasks: TasksActions()
 
 
     data class FetchAllLowPriorityTasks(
-        val newAllTasks: List<ToDoTask>
+        val newAllTasks: RequestState<List<ToDoTask>>
     ) : TasksActions()
 
     data class FetchAllHighPriorityTasks(
-        val newAllTasks: List<ToDoTask>
+        val newAllTasks: RequestState<List<ToDoTask>>
     ) : TasksActions()
 
   data class FetchShowSnackBar(
