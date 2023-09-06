@@ -80,7 +80,6 @@ fun ListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
-    Log.d("ListCon", "List OCntent-> ${allTasks}${sortState}")
     if (sortState is RequestState.Success) {
         when {
             searchAppBarState == SearchAppBarState.TRIGGERED -> {

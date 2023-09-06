@@ -182,7 +182,7 @@ class TaskMiddleware(
             TasksActions.FetchShowSnackBar(
                 ShowSnackBar(
                     opened = true,
-                    label = ActionLabels.DELETE,
+                    label = ActionLabels.DELETE_ALL,
                     message = "All Tasks Removed"
                 )
             )

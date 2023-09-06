@@ -39,10 +39,6 @@ fun ListScreen(
 
     val viewState by sharedViewModel.viewState.collectAsState()
 
-    LaunchedEffect(key1 = viewState.searchAppBarState ){
-        Log.d("ListScreen", "viewState.searchAppBarState ->${viewState.searchAppBarState}")
-    }
-
     val scaffoldState = rememberScaffoldState()
 
     DisplaySnackBar(
@@ -58,7 +54,6 @@ fun ListScreen(
                 )
             )
         },
-        taskTitle = sharedViewModel.viewState.value.title,
         viewState = viewState,
         sharedViewModel = sharedViewModel
     )
@@ -117,7 +112,6 @@ fun ListFab(
 fun DisplaySnackBar(
     scaffoldState: ScaffoldState,
     onComplete: (ActionLabels) -> Unit,
-    taskTitle: String,
     viewState: TaskViewState,
     sharedViewModel: SharedViewModel
 ) {
@@ -127,7 +121,7 @@ fun DisplaySnackBar(
         if (viewState.showSnackBar.label != ActionLabels.NO_ACTION) {
             scope.launch {
                 val result = scaffoldState.snackbarHostState.showSnackbar(
-                    message = setMessage(viewState.showSnackBar.label, taskTitle),
+                    message = viewState.showSnackBar.message,
                     actionLabel = setActionLabel(viewState.showSnackBar.label),
                     duration = SnackbarDuration.Short
                 )
@@ -140,13 +134,6 @@ fun DisplaySnackBar(
             onComplete(ActionLabels.NO_ACTION)
             sharedViewModel.updateShowSnackBar(ShowSnackBar())
         }
-    }
-}
-
-private fun setMessage(action: ActionLabels, taskTitle: String): String {
-    return when (action) {
-        ActionLabels.DELETE_ALL -> "All Tasks Removed"
-        else -> "${action}: $taskTitle"
     }
 }
 

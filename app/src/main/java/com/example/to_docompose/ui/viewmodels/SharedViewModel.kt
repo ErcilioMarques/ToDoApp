@@ -131,7 +131,7 @@ class SharedViewModel @Inject constructor(
 
      fun deleteAllTasks() {
         viewModelScope.launch(Dispatchers.IO) {
-            store.dispatch(TasksActions.DeleteTask)
+            store.dispatch(TasksActions.DeleteAllTasks)
 
         }
     }
