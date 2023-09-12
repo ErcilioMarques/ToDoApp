@@ -1,8 +1,8 @@
 package com.example.to_docompose.domain
 
+import com.example.to_docompose.data.repositories.interfaces.IDataStoreRepository
+import com.example.to_docompose.data.repositories.interfaces.IToDoRepository
 import com.example.to_docompose.domain.models.TaskViewState
-import com.example.to_docompose.domain.repositories.DataStoreRepository
-import com.example.to_docompose.domain.repositories.ToDoRepository
 import com.example.to_docompose.redux.BaseStore
 import com.example.to_docompose.redux.Reducer
 import javax.inject.Inject
@@ -18,8 +18,8 @@ import javax.inject.Inject
  * @param reducer
  */
 class TasksStore @Inject constructor(
-    private val repository: ToDoRepository,
-    private val dataStoreRepository: DataStoreRepository, initialState: TaskViewState,
+    private val repository: IToDoRepository,
+    private val dataStoreRepository: IDataStoreRepository, initialState: TaskViewState,
     reducer: Reducer<TaskViewState, TasksActions>,
 ) : BaseStore<TaskViewState, TasksActions>(
     initialState = TaskViewState(),

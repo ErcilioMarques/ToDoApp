@@ -1,6 +1,5 @@
 package com.example.to_docompose.domain
 
-import android.util.Log
 import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.redux.Reducer
@@ -12,11 +11,9 @@ import com.example.to_docompose.redux.Reducer
  */
 class TaskReducer : Reducer<TaskViewState, TasksActions> {
     override fun reduce(currentState: TaskViewState, action: TasksActions): TaskViewState {
-        Log.d("TaskReducer", action.toString())
 
         return when (action) {
             is TasksActions.FetchAllTasks -> {
-                Log.d("Reducer", "TaskReducer ->${action.newAllTasks.toString()}")
                 currentState.copy(allTasks = action.newAllTasks)
             }
 

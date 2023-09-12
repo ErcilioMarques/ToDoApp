@@ -1,12 +1,11 @@
 package com.example.to_docompose.domain
 
-import android.util.Log
+import com.example.to_docompose.data.repositories.interfaces.IDataStoreRepository
+import com.example.to_docompose.data.repositories.interfaces.IToDoRepository
 import com.example.to_docompose.domain.models.Priority
 import com.example.to_docompose.domain.models.ShowSnackBar
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.domain.models.ToDoTask
-import com.example.to_docompose.domain.repositories.DataStoreRepository
-import com.example.to_docompose.domain.repositories.ToDoRepository
 import com.example.to_docompose.redux.Middleware
 import com.example.to_docompose.redux.Store
 import com.example.to_docompose.util.ActionLabels
@@ -22,15 +21,14 @@ import kotlinx.coroutines.flow.map
  * @constructor Create [TaskMiddleware]
  */
 class TaskMiddleware(
-    private val repository: ToDoRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val repository: IToDoRepository,
+    private val dataStoreRepository: IDataStoreRepository
 ) : Middleware<TaskViewState, TasksActions> {
     override suspend fun process(
         action: TasksActions,
         currentState: TaskViewState,
         store: Store<TaskViewState, TasksActions>
     ) {
-        Log.d("TaskMiddleware ->", action.toString())
 
         return when (action) {
 

@@ -94,7 +94,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    private fun getAllTasks() {
+    fun getAllTasks() {
 
         viewModelScope.launch {
             store.dispatch(

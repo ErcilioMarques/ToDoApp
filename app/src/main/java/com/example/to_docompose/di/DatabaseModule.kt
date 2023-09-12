@@ -2,8 +2,11 @@ package com.example.to_docompose.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.to_docompose.data.repositories.interfaces.IDataStoreRepository
+import com.example.to_docompose.data.repositories.interfaces.IToDoRepository
 import com.example.to_docompose.domain.TaskReducer
 import com.example.to_docompose.domain.TasksStore
+import com.example.to_docompose.domain.ToDoDao
 import com.example.to_docompose.domain.ToDoDatabase
 import com.example.to_docompose.domain.models.TaskViewState
 import com.example.to_docompose.domain.repositories.DataStoreRepository
@@ -35,7 +38,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesTaskReducer(database: ToDoDatabase) = TaskReducer()
+    fun providesTaskReducer() = TaskReducer()
 
     @Singleton
     @Provides
@@ -45,7 +48,6 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideTasksStore(
-        initialState: TaskViewState,
         repository: ToDoRepository,
         dataStoreRepository: DataStoreRepository,
         reducer: TaskReducer,
@@ -55,4 +57,13 @@ object DatabaseModule {
         dataStoreRepository = dataStoreRepository,
         reducer = reducer
     )
+
+    @Singleton
+    @Provides
+    fun provideToDoRepository(toDoDao: ToDoDao): IToDoRepository = ToDoRepository(toDoDao = toDoDao)
+
+
+    @Singleton
+    @Provides
+    fun provideDataStoreRepository(  @ApplicationContext context: Context): IDataStoreRepository = DataStoreRepository(context = context)
 }
