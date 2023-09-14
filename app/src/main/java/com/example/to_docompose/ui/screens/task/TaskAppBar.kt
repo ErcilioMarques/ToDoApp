@@ -15,6 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +24,6 @@ import com.example.to_docompose.R
 import com.example.to_docompose.components.DisplayAlertDialog
 import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.data.models.ToDoTask
-import com.example.to_docompose.ui.theme.taskItemBackgroundColor
 import com.example.to_docompose.ui.theme.topAppBarBackgroundColor
 import com.example.to_docompose.ui.theme.topAppBarContentColor
 import com.example.to_docompose.util.Action
@@ -116,7 +117,7 @@ fun BackAction(
 fun AddAction(
     onAddClicked: (Action) -> Unit
 ) {
-    IconButton(onClick = { onAddClicked(Action.ADD) }) {
+    IconButton(onClick = { onAddClicked(Action.ADD) }, modifier = Modifier.testTag(stringResource(R.string.addtaskbuttonformtag))) {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.add_task_icon),
