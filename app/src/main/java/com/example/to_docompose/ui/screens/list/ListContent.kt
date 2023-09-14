@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -93,6 +94,7 @@ fun ListContent(
 
             sortState.data == Priority.NONE -> {
                 if (allTasks is RequestState.Success) {
+                    Log.d("LIST", "data -> ${allTasks.data}")
                     HandleListContent(
                         tasks = allTasks.data,
                         onSwipeToDelete = onSwipeToDelete,
@@ -133,9 +135,14 @@ fun HandleListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
     sharedViewModel: SharedViewModel
 ) {
+    Log.d("List", "tasks is -> ${tasks.isEmpty()}")
     if (tasks.isEmpty()) {
         EmptyContent()
     } else {
+        Log.d("List", "tasks is -> ${tasks.isEmpty()}")
+
+        Log.d("List", "Listar itens porque ha dados")
+
         DisplayTasks(
             tasks = tasks,
             onSwipeToDelete = onSwipeToDelete,
@@ -263,7 +270,9 @@ fun TaskItem(
         ) {
             Row {
                 Text(
-                    modifier = Modifier.weight(8f),
+                    modifier = Modifier
+                        .weight(8f)
+                        .testTag(stringResource(R.string.tasktitletag)),
                     text = toDoTask.title,
                     color = MaterialTheme.colors.taskItemTextColor,
                     style = MaterialTheme.typography.h5,
@@ -287,7 +296,9 @@ fun TaskItem(
                 }
             }
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(stringResource(R.string.taskdescriptiontag)),
                 text = toDoTask.description,
                 color = MaterialTheme.colors.taskItemTextColor,
                 style = MaterialTheme.typography.subtitle1,

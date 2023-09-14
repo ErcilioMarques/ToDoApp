@@ -26,4 +26,9 @@
     <string name="delete_all_task">Remove All Tasks?</string>
     <string name="delete_all_task_confirmation">Are you sure you want to remove all Tasks? There is no going back after this action</string>
     <string name="todo_app_logo">ToDo App Logo</string>
+    <string name="descriptioninputtag">descriptionInputTag</string>
+    <string name="titleinputtag">titleInputTag</string>
+    <string name="taskslisttitletag">tasksListTitleTag</string>
+    <string name="taskdescriptiontag">taskDescriptionTag</string>
+    <string name="tasktitletag">taskTitleTag</string>
 </resources>
