@@ -18,6 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -144,7 +146,7 @@ fun AddAction(
 ) {
     IconButton(onClick = {
         onAddClicked(ActionLabels.ADD)
-    }) {
+    }, modifier = Modifier.testTag(stringResource(R.string.addtaskbuttonformtag))) {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.add_task_icon),
