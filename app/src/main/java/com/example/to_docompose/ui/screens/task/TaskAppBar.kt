@@ -117,7 +117,7 @@ fun BackAction(
 fun AddAction(
     onAddClicked: (Action) -> Unit
 ) {
-    IconButton(onClick = { onAddClicked(Action.ADD) }, modifier = Modifier.testTag(stringResource(R.string.addtaskbuttonformtag))) {
+    IconButton(onClick = { onAddClicked(Action.ADD) }, modifier = Modifier.testTag(stringResource(R.string.addtaskbuttonformtag))){
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.add_task_icon),

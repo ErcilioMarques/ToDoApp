@@ -31,4 +31,5 @@
     <string name="taskslisttitletag">tasksListTitleTag</string>
     <string name="taskdescriptiontag">taskDescriptionTag</string>
     <string name="tasktitletag">taskTitleTag</string>
+    <string name="addtaskbuttonformtag">addTaskButtonFormTag</string>
 </resources>
