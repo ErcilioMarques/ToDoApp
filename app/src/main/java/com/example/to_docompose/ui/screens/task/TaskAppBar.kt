@@ -146,7 +146,7 @@ fun AddAction(
 ) {
     IconButton(onClick = {
         onAddClicked(ActionLabels.ADD)
-    }, modifier = Modifier.testTag(stringResource(R.string.addtaskbuttonformtag))) {
+    }, modifier = Modifier.testTag(stringResource(R.string.addtaskbuttonformtag))){
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.add_task_icon),
