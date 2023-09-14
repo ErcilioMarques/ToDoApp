@@ -12,6 +12,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.to_docompose.R
@@ -36,7 +37,9 @@ fun TaskContent(
             .padding(all = LARGE_PADDING)
     ) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(stringResource(R.string.titleinputtag)),
             value = title,
             onValueChange = { onTitleChange(it) },
             label = {
@@ -53,7 +56,9 @@ fun TaskContent(
         PriorityDropDown(priority = priority, onPrioritySelected = onPriorityChange)
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(stringResource(R.string.descriptioninputtag)),
             value = description,
             onValueChange = { onDescriptionChange(it) },
             label = {
