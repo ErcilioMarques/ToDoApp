@@ -145,7 +145,7 @@ fun CloseAction(
 fun DeleteAction(
     onDeleteClicked: () -> Unit
 ) {
-    IconButton(onClick = { onDeleteClicked() }) {
+    IconButton(onClick = { onDeleteClicked() }, modifier = Modifier.testTag(stringResource(R.string.deletetaskbuttonformtag))) {
         Icon(
             imageVector = Icons.Filled.Delete,
             contentDescription = stringResource(R.string.delete_icon),
@@ -159,7 +159,9 @@ fun DeleteAction(
 fun UpdateAction(
     onUpdateClicked: (Action) -> Unit
 ) {
-    IconButton(onClick = { onUpdateClicked(Action.UPDATE) }) {
+    IconButton(onClick = { onUpdateClicked(Action.UPDATE) }, modifier = Modifier.testTag(
+        stringResource(R.string.editaskbuttonformtag)
+    )) {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = stringResource(R.string.update_icon),
