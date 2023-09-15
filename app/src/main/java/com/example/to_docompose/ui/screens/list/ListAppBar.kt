@@ -125,7 +125,7 @@ fun ListAppBarActions(
 
 @Composable
 fun SearchAction(onSearchClicked: () -> Unit) {
-    IconButton(onClick = { onSearchClicked() }) {
+    IconButton(onClick = { onSearchClicked() }, modifier = Modifier.testTag(stringResource(R.string.searchtaskformbuttontag))) {
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = stringResource(id = R.string.search_text),
@@ -140,7 +140,7 @@ fun SortAction(onSortClicked: (Priority) -> Unit) {
     var expanded by remember {
         mutableStateOf(false)
     }
-    IconButton(onClick = { expanded = true }) {
+    IconButton(onClick = { expanded = true }, modifier = Modifier.testTag(stringResource(R.string.filterbypriorityformtag))) {
         Icon(
             painter = painterResource(id = R.drawable.ic_filter_list_24),
             contentDescription = stringResource(R.string.sort_actions),
@@ -205,7 +205,9 @@ fun SearchAppBar(
         elevation = AppBarDefaults.TopAppBarElevation,
         color = MaterialTheme.colors.topAppBarBackgroundColor
     ) {
-        TextField(modifier = Modifier.fillMaxWidth().testTag("searchTextFieldTag"), value = text, onValueChange = {
+        TextField(modifier = Modifier
+            .fillMaxWidth()
+            .testTag(stringResource(R.string.searchtextfieldtag)), value = text, onValueChange = {
             onTextChange(it)
         }, placeholder = {
             Text(
