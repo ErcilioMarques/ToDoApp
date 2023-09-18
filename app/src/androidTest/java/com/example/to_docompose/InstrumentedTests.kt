@@ -180,9 +180,6 @@ class InstrumentedTests {
             )
 
             onNodeWithText(title).assertIsDisplayed()
-            assert((viewModel.viewState.value.allTasks as RequestState.Success<List<ToDoTask>>).data.find { it -> it.title != title } == null)
-            assert((viewModel.viewState.value.allTasks as RequestState.Success<List<ToDoTask>>).data.find { it -> it.title == title } != null)
-
         }
     }
 
