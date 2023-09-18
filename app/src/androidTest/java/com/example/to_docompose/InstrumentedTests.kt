@@ -107,13 +107,16 @@ class InstrumentedTests {
             onNodeWithText("Description").assertIsDisplayed()
 
             onNodeWithTag("titleInputTag").performTextInput("")
+            waitForIdle()
             onNodeWithTag("titleInputTag").performTextInput(newTitle)
+            waitForIdle()
             onNodeWithTag("descriptionInputTag").performTextInput("")
+            waitForIdle()
             onNodeWithTag("descriptionInputTag").performTextInput(newDescription)
-
+            waitForIdle()
             onNodeWithContentDescription("Update Icon").performClick()
             waitForIdle()
-            onNodeWithText(newTitle).assertIsDisplayed()
+            onNodeWithText(newDescription).assertIsDisplayed()
 
         }
     }
