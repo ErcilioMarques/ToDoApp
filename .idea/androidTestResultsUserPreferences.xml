@@ -166,6 +166,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_2_API_30" value="120" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -225,6 +226,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="949063859">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_30" value="120" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="976948148">
           <value>
             <AndroidTestResultsTableState>
@@ -258,6 +273,19 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1531651798">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_30" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -349,6 +377,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_30" value="120" />
                   <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
