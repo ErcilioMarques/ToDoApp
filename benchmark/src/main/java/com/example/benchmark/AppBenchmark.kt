@@ -54,10 +54,11 @@ class AppBenchmark {
         addTaskOperation()
     }
 
-    fun MacrobenchmarkScope.addTaskOperation() {
+    private fun MacrobenchmarkScope.addTaskOperation() {
         val title = "My Title"
         val description = "My Description"
 
+        device.wait(Until.hasObject(By.res("addTaskButtonTag")), 1000)
         device.findObject(By.res("addTaskButtonTag")).click()
         device.wait(Until.hasObject(By.res("titleInputTag")), 1000)
 
@@ -84,7 +85,7 @@ class AppBenchmark {
         editTaskOperation()
     }
 
-    fun MacrobenchmarkScope.editTaskOperation() {
+    private fun MacrobenchmarkScope.editTaskOperation() {
         val title = "My Title"
         val newTitle = "My New Title"
         val newDescription = "My New Description"
@@ -117,7 +118,7 @@ class AppBenchmark {
         deleteTaskOperation()
     }
 
-    fun MacrobenchmarkScope.deleteTaskOperation() {
+    private fun MacrobenchmarkScope.deleteTaskOperation() {
 
         addTaskOperation()
         val title = "My Title"
@@ -149,7 +150,7 @@ class AppBenchmark {
         searchTaskOperation()
     }
 
-    fun MacrobenchmarkScope.searchTaskOperation() {
+    private fun MacrobenchmarkScope.searchTaskOperation() {
 
         addTaskOperation()
         val title = "My Title"
@@ -176,7 +177,7 @@ class AppBenchmark {
         filterTasksOperation()
     }
 
-    fun MacrobenchmarkScope.filterTasksOperation() {
+    private fun MacrobenchmarkScope.filterTasksOperation() {
 
         addTaskOperation()
         device.wait(Until.hasObject(By.res("filterByPriorityFormTag")), 1000)
@@ -202,7 +203,7 @@ class AppBenchmark {
         showTaskDetailsOperation()
     }
 
-    fun MacrobenchmarkScope.showTaskDetailsOperation() {
+    private fun MacrobenchmarkScope.showTaskDetailsOperation() {
         addTaskOperation()
         val title = "My Title"
 

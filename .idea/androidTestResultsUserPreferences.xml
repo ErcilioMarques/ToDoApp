@@ -94,6 +94,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-1023617757">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-975928729">
           <value>
             <AndroidTestResultsTableState>
@@ -107,6 +120,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-195822646">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="12795017">
           <value>
             <AndroidTestResultsTableState>
@@ -114,6 +140,19 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_2_API_30" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="15072832">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -166,6 +205,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_2_API_30" value="120" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -186,6 +226,20 @@
           </value>
         </entry>
         <entry key="707991290">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_30" value="120" />
+                  <entry key="TECNO MOBILE LIMITED TECNO KB7" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="821993520">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">

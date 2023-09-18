@@ -1,7 +1,7 @@
 package com.example.to_docompose.repositories
 
-import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.data.repositories.interfaces.IDataStoreRepository
+import com.example.to_docompose.domain.models.Priority
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

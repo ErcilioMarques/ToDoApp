@@ -10,11 +10,14 @@ import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.data.models.ToDoTask
-import com.example.to_docompose.navigation.SetupNavigation
+import com.example.to_docompose.domain.TaskReducer
+import com.example.to_docompose.domain.TasksStore
+import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.TaskViewState
+import com.example.to_docompose.domain.models.ToDoTask
 import com.example.to_docompose.repositories.FakeDataStoreRepository
 import com.example.to_docompose.repositories.FakeToDoTaskRepository
+import com.example.to_docompose.ui.navigation.SetupNavigation
 import com.example.to_docompose.ui.theme.ToDoComposeTheme
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.Constants.LIST_SCREEN
@@ -35,7 +38,12 @@ class InstrumentedTests {
     @Before
     fun setUp() {
         viewModel = SharedViewModel(
-            repository = FakeToDoTaskRepository(), dataStoreRepository = FakeDataStoreRepository()
+            store = TasksStore(
+                initialState = TaskViewState(),
+                repository = FakeToDoTaskRepository(),
+                dataStoreRepository = FakeDataStoreRepository(),
+                reducer = TaskReducer(),
+            )
         )
     }
 
@@ -54,7 +62,7 @@ class InstrumentedTests {
             assertThat(navController.currentBackStackEntry?.destination?.route).isEqualTo(
                 LIST_SCREEN
             )
-
+            waitForIdle()
             onNodeWithContentDescription("Add Button").performClick()
             waitForIdle()
             assertThat(navController.currentBackStackEntry?.destination?.route).isEqualTo(
@@ -138,7 +146,7 @@ class InstrumentedTests {
             onNodeWithContentDescription("Delete Icon").performClick()
             onNodeWithText("Yes").performClick()
             waitForIdle()
-            assert((viewModel.allTasks.value as RequestState.Success<List<ToDoTask>>).data.none { it -> it.title == title })
+            assert((viewModel.viewState.value.allTasks as RequestState.Success<List<ToDoTask>>).data.none { it -> it.title == title })
         }
     }
 
@@ -169,8 +177,8 @@ class InstrumentedTests {
             )
 
             onNodeWithText(title).assertIsDisplayed()
-            assert((viewModel.searchedTasks.value as RequestState.Success<List<ToDoTask>>).data.find { it -> it.title != title } == null)
-            assert((viewModel.searchedTasks.value as RequestState.Success<List<ToDoTask>>).data.find { it -> it.title == title } != null)
+            assert((viewModel.viewState.value.allTasks as RequestState.Success<List<ToDoTask>>).data.find { it -> it.title != title } == null)
+            assert((viewModel.viewState.value.allTasks as RequestState.Success<List<ToDoTask>>).data.find { it -> it.title == title } != null)
 
         }
     }
@@ -195,20 +203,20 @@ class InstrumentedTests {
             onNodeWithContentDescription("Sort actions").performClick()
 
             onNodeWithText("LOW").performClick()
-            assert(viewModel.lowPriorityTasks.value != emptyList<ToDoTask>())
+            assert(viewModel.viewState.value.lowPriorityTasks != emptyList<ToDoTask>())
 
             waitForIdle()
 
             onNodeWithContentDescription("Sort actions").performClick()
 
             onNodeWithText("HIGH").performClick()
-            assert(viewModel.highPriorityTasks.value != emptyList<ToDoTask>())
+            assert(viewModel.viewState.value.highPriorityTasks != emptyList<ToDoTask>())
 
 
         }
     }
 
-@Test
+    @Test
     fun showTaskDetails() {
         val title = "My Title"
         val description = "My Description"

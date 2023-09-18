@@ -1,8 +1,8 @@
 package com.example.to_docompose.repositories
 
-import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.data.models.ToDoTask
 import com.example.to_docompose.data.repositories.interfaces.IToDoRepository
+import com.example.to_docompose.domain.models.Priority
+import com.example.to_docompose.domain.models.ToDoTask
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

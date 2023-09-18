@@ -1,7 +1,6 @@
 package com.example.to_docompose.ui.screens.list
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
